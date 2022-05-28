@@ -182,8 +182,8 @@ video {
   }
 
   video {
-    height: 50%;
-    width: 50%;
+    height: 400%;
+    width: 100%;
   }
 
   #showChat {
