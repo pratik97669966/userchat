@@ -154,7 +154,8 @@ video {
 
 #video-grid {
   display: flex;
-  justify-content: start;
+  justify-content: top;
+  overflow: hidden;
   flex-wrap: wrap;
 }
 
@@ -176,12 +177,12 @@ video {
     display: none;
   }
   .main__left {
-    width: 100%;
-    flex: 1;
+    width: auto;
+    flex: auto;
   }
 
   video {
-    height: fit-content;
+    height: 50%;
     width: 50%;
   }
 
