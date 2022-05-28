@@ -42,17 +42,17 @@
 .videos__group {
   flex-grow: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: stretch;
   padding: 1rem;
   background-color: var(--main-dark);
 }
 
 video {
-  height: 300px;
+  height: 200px;
   border-radius: 1rem;
   margin: 0.5rem;
-  width: 400px;
+  width: 300px;
   object-fit: cover;
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
@@ -154,7 +154,7 @@ video {
 
 #video-grid {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   flex-wrap: wrap;
 }
 
@@ -181,8 +181,8 @@ video {
   }
 
   video {
-    height: auto;
-    width: 100%;
+    height: fit-content;
+    width: 50%;
   }
 
   #showChat {
