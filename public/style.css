@@ -153,8 +153,9 @@ video {
 }
 
 #video-grid {
-  display: 100%;
-  justify-content: flex-end;
+  display: flex;
+  justify-content: top;
+  overflow-y: auto;
   flex-wrap: wrap;
 }
 
