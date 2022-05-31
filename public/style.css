@@ -156,6 +156,7 @@ video {
   display: flex;
   justify-content: top;
   overflow-x: auto;
+  overflow-y: auto;
   flex-wrap: wrap;
 }
 
