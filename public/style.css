@@ -155,7 +155,7 @@ video {
 #video-grid {
   display: flex;
   justify-content: top;
-  overflow-y: auto;
+  overflow-x: auto;
   flex-wrap: wrap;
 }
 
