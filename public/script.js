@@ -138,7 +138,7 @@ socket.on("createMessage", (message, userName) => {
         <span>${message}</span>
     </div>`;
     window.setInterval(function() {
-      var elem = document.getElementById('message');
+      var elem = document.getElementById("message");
       elem.scrollTop = elem.scrollHeight;
     }, 5000);
 });
