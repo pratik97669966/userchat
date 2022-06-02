@@ -137,6 +137,4 @@ socket.on("createMessage", (message, userName) => {
         }</span> </b>
         <span>${message}</span>
     </div>`;
-var myMessage = document.getElementsByClassName("main__right")[0];
-			myMessage.scrollTop = myMessage.scrollHeight;
 });
