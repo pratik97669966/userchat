@@ -138,7 +138,7 @@ socket.on("createMessage", (message, userName) => {
         <span>${message}</span>
     </div>`;
     var ht = 0;
-$(".messages div").each(function() {
+$(".main__chat_window").each(function() {
   ht += $(this).height();
 });
 $(".messages").animate({scrollTop: ht});
