@@ -131,12 +131,12 @@ inviteButton.addEventListener("click", (e) => {
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
     messages.innerHTML +
-    <div class="message">
+    `<div class="message">
         <b><i class="far fa-user-circle"></i> <span> ${
            userName
         }</span> </b>
         <span>${message}</span>
-    </div>;
+    </div>`;
     var myMessage = document.getElementsByClassName("messages")[0];
     myMessage.scrollTop = myMessage.scrollHeight;
 });
