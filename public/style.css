@@ -131,6 +131,7 @@ video {
 .message {
   display: flex;
   flex-direction: column;
+  width: 200px;
 }
 
 .message > b {
@@ -150,7 +151,12 @@ video {
   margin: 1rem 0;
   padding: 1rem;
   border-radius: 5px;
+
 }
+li {
+  height: 1000px;
+  }
+
 
 #video-grid {
   display: flex;
