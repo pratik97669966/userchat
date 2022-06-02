@@ -137,5 +137,8 @@ socket.on("createMessage", (message, userName) => {
         }</span> </b>
         <span>${message}</span>
     </div>`;
-     $(".messages").animate({scrollTop: $(".messages").prop("scrollHeight")}, 10);
+    window.setInterval(function() {
+      var elem = document.getElementById('message');
+      elem.scrollTop = elem.scrollHeight;
+    }, 5000);
 });
