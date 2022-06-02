@@ -137,5 +137,5 @@ socket.on("createMessage", (message, userName) => {
         }</span> </b>
         <span>${message}</span>
     </div>`;
-     $(".messages").animate({scrollTop: $(".messages").prop("scrollHeight")}, 100);
+     $(".messages").animate({scrollTop: $(".messages").prop("scrollHeight")}, 10);
 });
