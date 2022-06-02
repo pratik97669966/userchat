@@ -31,7 +31,7 @@ let myVideoStream;
 navigator.mediaDevices
   .getUserMedia({
     audio: true,
-    video: true,
+    video: false,
   })
   .then((stream) => {
     myVideoStream = stream;
@@ -137,8 +137,5 @@ socket.on("createMessage", (message, userName) => {
         }</span> </b>
         <span>${message}</span>
     </div>`;
-    window.setInterval(function() {
-      var elem = document.getElementById("message");
-      elem.scrollTop = elem.scrollHeight;
-    }, 5000);
+
 });
