@@ -108,7 +108,7 @@ video {
 
 .main__message_container {
   padding: 1rem;
-  display: block;
+  display: inline-block;
   align-items: center;
   justify-content: center;
 }
