@@ -31,7 +31,7 @@ let myVideoStream;
 navigator.mediaDevices
   .getUserMedia({
     audio: true,
-    video: false,
+    video: true,
   })
   .then((stream) => {
     myVideoStream = stream;
@@ -137,8 +137,10 @@ socket.on("createMessage", (message, userName) => {
         }</span> </b>
         <span>${message}</span>
     </div>`;
-    $('.messages').animate({
-      scrollTop: $('.messages')[0].scrollHeight
-    }, 1000);
-    
+    var ht = 0;
+$(".messages div").each(function() {
+  ht += $(this).height();
+});
+$(".messages").animate({scrollTop: ht});
+
 });
