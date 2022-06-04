@@ -179,7 +179,7 @@ video {
   }
   .main__left {
     width: 100%;
-    flex: 1;
+    /* flex: 1; */
   }
 
   video {
