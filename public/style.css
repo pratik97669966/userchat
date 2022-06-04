@@ -153,11 +153,11 @@ video {
 }
 
 #video-grid {
-  display: flex;
+  display: inline-table;
   justify-content: top;
   overflow-x: auto;
   overflow-y: auto;
-  flex-wrap: wrap;
+  
 }
 
 #showChat {
@@ -183,7 +183,7 @@ video {
   }
 
   video {
-    height: auto;
+    height: 40%;
     width: 100%;
   }
 

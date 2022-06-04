@@ -61,7 +61,10 @@ const connectToNewUser = (userId, stream) => {
 peer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id, user);
 });
-
+myVideoStream.getAudioTracks()[0].enabled = false;
+html = `<i class="fas fa-microphone-slash"></i>`;
+muteButton.classList.toggle("background__red");
+muteButton.innerHTML = html;
 const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
