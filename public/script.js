@@ -66,7 +66,8 @@ const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
     video.play();
-    videoGrid.append(video);
+    // videoGrid.append(video);
+    adjustWindows();
   });
 };
 
@@ -140,3 +141,89 @@ socket.on("createMessage", (message, userName) => {
     var myMessage = document.getElementsByClassName("main__chat_window")[0];
 			myMessage.scrollTop = myMessage.scrollHeight;
 });
+// santosh added
+
+      //  $(document).ready(function(){
+      //      //alert("Hi");
+           
+          // $("#btnAddWindow").click(function(){   
+          //   var cnt = $('.mainContainer .item').length;
+          //   if(cnt != 6) {
+          //       $('.mainContainer').append('<div class="item" style="flex-basis: 90%;">&nbsp;</div>');
+          //       adjustWindows();
+          //   }
+          //   else{
+          //       alert("Char room is full...!");
+          //   }
+          // });
+
+          // $("#btnRemoveWindow").click(function(){
+          //   //$("div p:nth-child(2)").css("background-color", "yellow");
+          //   var cnt = $('.mainContainer .item').length;
+          //   //alert(cnt);
+          //   if(cnt > 0) {
+          //       $(".mainContainer .item:nth-child(1)").remove();
+          //       adjustWindows();
+          //   }
+          //   else {
+          //       alert("No window delete");
+          //   }
+          // });
+
+        // });
+
+        function adjustWindows()
+        {
+            var cnt = $('#video-grid video').length;
+            // if(cnt == 0)
+            // {
+            //     alert("No windows available");
+            // }
+            // else
+            // {
+            //     alert("No of windows: " + cnt);
+                if(cnt == 1) {
+                    $("#video-grid video:nth-child(1)").css("flex-basis", "90%");
+                    return;
+                }
+                else if(cnt == 2) {
+                    $("#video-grid video:nth-child(1)").css("flex-basis", "90%");
+                    $("#video-grid video:nth-child(2)").css("flex-basis", "90%");
+                    return;
+                }
+                else if(cnt == 3)
+                {
+                    $("#video-grid video:nth-child(1)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(2)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(3)").css("flex-basis", "90%");
+                    return;
+                }
+                else if(cnt == 4)
+                {
+                    $("#video-grid video:nth-child(1)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(2)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(3)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(4)").css("flex-basis", "45%");
+                    return;  
+                }
+                else if(cnt == 5)
+                {
+                    $("#video-grid video:nth-child(1)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(2)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(3)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(4)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(5)").css("flex-basis", "90%");
+                    return;  
+                }
+                else if(cnt == 6)
+                {
+                    $("#video-grid video:nth-child(1)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(2)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(3)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(4)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(5)").css("flex-basis", "45%");
+                    $("#video-grid video:nth-child(6)").css("flex-basis", "45%");
+                    return;  
+                }
+            }
+        // }
