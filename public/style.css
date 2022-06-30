@@ -154,10 +154,10 @@ video {
 }
 
 #video-grid {
-  display: inline-table;
+  /* display: inline-table;
   justify-content: top;
   overflow-x: auto;
-  overflow-y: auto;
+  overflow-y: auto; */
     /* Santosh get chenges */
     display: flex;
     flex-wrap: wrap;   
