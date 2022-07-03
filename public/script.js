@@ -174,8 +174,8 @@ socket.on("createMessage", (message, userName) => {
 
         function adjustWindows()
         {
-           // var cnt = $('#video-grid video').length;
-		let cnt = document.getElementById("video-grid").childElementCount;
+           var cnt = $('#video-grid video').length;
+// 		let cnt = document.getElementById("video-grid").childElementCount;
             // if(cnt == 0)
             // {
             //     alert("No windows available");
