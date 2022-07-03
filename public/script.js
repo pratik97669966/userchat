@@ -67,7 +67,7 @@ const addVideoStream = (video, stream) => {
   video.addEventListener("loadedmetadata", () => {
     video.play();
      videoGrid.append(video);
-    adjustWindows();
+  //  adjustWindows();
   });
 };
 
@@ -174,8 +174,8 @@ socket.on("createMessage", (message, userName) => {
 
         function adjustWindows()
         {
-          // var cnt = $('#video-grid video').length;
-		let cnt = document.getElementById("video-grid").childElementCount;
+         // var cnt = $('#video-grid video').length;
+//		let cnt = document.getElementById("video-grid").childElementCount;
 // 		let cnt = document.getElementById("video-grid").childElementCount;
             // if(cnt == 0)
             // {
