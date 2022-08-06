@@ -4,7 +4,10 @@ const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 myVideo.muted = true;
-
+document.querySelector(".main__right").style.display = "flex";
+  document.querySelector(".main__right").style.flex = "1";
+  document.querySelector(".main__left").style.display = "none";
+  document.querySelector(".header__back").style.display = "block";
 backBtn.addEventListener("click", () => {
   document.querySelector(".main__left").style.display = "flex";
   document.querySelector(".main__left").style.flex = "1";
@@ -19,7 +22,7 @@ showChat.addEventListener("click", () => {
   document.querySelector(".header__back").style.display = "block";
 });
 
-const user = "User";
+const user = "<%= userName %>";
 
 var peer = new Peer(undefined, {
   path: "/peerjs",
