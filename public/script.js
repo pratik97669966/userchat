@@ -21,8 +21,8 @@ showChat.addEventListener("click", () => {
   document.querySelector(".main__left").style.display = "none";
   document.querySelector(".header__back").style.display = "block";
 });
-
-const user = "<%= userName %>";
+const params = new URLSearchParams(window.location.search);
+const user = params.get('userName');
 
 var peer = new Peer(undefined, {
   path: "/peerjs",
