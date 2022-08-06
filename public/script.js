@@ -31,7 +31,7 @@ let myVideoStream;
 navigator.mediaDevices
   .getUserMedia({
     audio: true,
-    video: false,
+    video: true,
   })
   .then((stream) => {
     myVideoStream = stream;
@@ -67,7 +67,7 @@ const addVideoStream = (video, stream) => {
   video.addEventListener("loadedmetadata", () => {
     video.play();
      videoGrid.append(video);
-  //  adjustWindows();
+    adjustWindows();
   });
 };
 
@@ -123,10 +123,7 @@ stopVideo.addEventListener("click", () => {
 });
 
 inviteButton.addEventListener("click", (e) => {
-  prompt(
-    "Copy this link and send it to people you want to meet with",
-    window.location.href
-  );
+ 
 });
 
 socket.on("createMessage", (message, userName) => {
@@ -174,9 +171,7 @@ socket.on("createMessage", (message, userName) => {
 
         function adjustWindows()
         {
-         // var cnt = $('#video-grid video').length;
-//		let cnt = document.getElementById("video-grid").childElementCount;
-// 		let cnt = document.getElementById("video-grid").childElementCount;
+            var cnt = $('#video-grid video').length;
             // if(cnt == 0)
             // {
             //     alert("No windows available");
