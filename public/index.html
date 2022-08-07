@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/x-icon" href="images/artichoke.ico"/>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://kit.fontawesome.com/c939d0e917.js"></script>
+    <script src="https://unpkg.com/peerjs@1.4.5/dist/peerjs.min.js"></script>
+    <script>
+      const ROOM_ID = "<%= roomId %>";
+    </script>
   </head>
   <body>
     <header>
@@ -71,6 +78,24 @@
              Openchat is under serveillance  !! ...
           </label> 
         </div>  -->
+        <div class="options">
+          <div class="options__left">
+            <div id="stopVideo" class="options__button">
+              <i class="fa fa-video-camera"></i>
+            </div>
+            <div id="muteButton" class="options__button">
+              <i class="fa fa-microphone"></i>
+            </div>
+            <div id="showChat" class="options__button">
+              <i class="fa fa-comment"></i>
+            </div>
+          </div>
+          <div class="options__right">
+            <div id="inviteButton" class="options__button">
+              <i class="fas fa-user-plus"></i>
+            </div>
+          </div>
+        </div>
       <section id="chat">
         <div id="chat-window">
           <span class="tag is-success is-light" id="users-counter">Online: 0</span>
