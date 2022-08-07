@@ -51,9 +51,6 @@ navigator.mediaDevices
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
-      messages.innerHTML+= `<p><strong>${user}</strong> has connected!</p>`;
-       text.value = "";
-    });
   });
 
 const connectToNewUser = (userId, stream) => {
@@ -94,6 +91,9 @@ send.addEventListener("click", (e) => {
 
 socket.on('broadcast', (number) => {
   usersCounter.innerHTML = number;
+  socket.emit("message",`<p><strong>${user}</strong> has connected!</p>`);
+  text.value = "";
+});
 });
 
 text.addEventListener("keydown", (e) => {
