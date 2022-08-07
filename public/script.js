@@ -63,7 +63,15 @@ const connectToNewUser = (userId, stream) => {
     addVideoStream(video, userVideoStream);
   });
 };
-
+socket.on('user-disconnected', (userId) => {
+  if (user == null) {
+    socket.emit("message", `user has Disconnected !`);
+  text.value = "";
+  } else {
+    socket.emit("message", `<p><strong>${user}</strong> has Disconnected !</p>`);
+  text.value = "";
+  }
+});
 peer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id, user);
 });
