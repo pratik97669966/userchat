@@ -182,7 +182,26 @@ video {
   left: 28px;
   color: #fff;
 }
+#users-counter {
+  font-size: 18px;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: var(--second-color);
+  color: var(--text-color);
+}
 
+#you-joined {
+  padding: 10px 0px;
+  margin: 0 18px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color);
+  text-align: center;
+  font-weight: 600;
+}
 @media (max-width: 700px) {
   .main__right {
     display: none;

@@ -3,6 +3,7 @@ const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
+const usersCounter = document.getElementById('users-counter');
 myVideo.muted = true;
 document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
@@ -71,18 +72,29 @@ const addVideoStream = (video, stream) => {
     video.play();
      videoGrid.append(video);
     adjustWindows();
+    myVideoStream.getAudioTracks()[0].enabled = false;
+    html = `<i class="fas fa-microphone-slash"></i>`;
+    muteButton.classList.toggle("background__red");
+    muteButton.innerHTML = html;
   });
 };
 
 let text = document.querySelector("#chat_message");
 let send = document.getElementById("send");
 let messages = document.querySelector(".messages");
-
+socket.on('user-connected', (username) => {
+  socket.emit("message", `<p><strong>${username}</strong> has connected!</p>`);
+  text.value = "";
+});
 send.addEventListener("click", (e) => {
   if (text.value.length !== 0) {
     socket.emit("message", text.value);
     text.value = "";
   }
+});
+
+socket.on('broadcast', (number) => {
+  usersCounter.innerHTML = number;
 });
 
 text.addEventListener("keydown", (e) => {
