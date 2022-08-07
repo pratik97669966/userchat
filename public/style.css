@@ -218,7 +218,18 @@ body.dark {
 .onoffswitch-checkbox {
    display: none;
 }
-
+.options__button {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background-color: var(--primary-color);
+   height: 50px;
+   border-radius: 5px;
+   color: var(--main-light);
+   font-size: 1.2rem;
+   width: 50px;
+   margin: 0 0.5rem;
+ }
 .onoffswitch-label {
    display: block;
    overflow: hidden;
