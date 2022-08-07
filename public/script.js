@@ -83,7 +83,7 @@ let text = document.querySelector("#chat_message");
 let send = document.getElementById("send");
 let messages = document.querySelector(".messages");
 socket.on('user-connected', (username) => {
-  socket.emit("message", `<p><strong>${username}</strong> has connected!</p>`);
+  socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
   text.value = "";
 });
 send.addEventListener("click", (e) => {
