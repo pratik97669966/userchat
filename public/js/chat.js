@@ -58,7 +58,7 @@ const params = new URLSearchParams(window.location.search);
           });
         };
         peer.on("open", (id) => {
-          socket.emit("join-room", ROOM_ID, id, user);
+          socket.emit("join-room", "123456", id, user);
         });  
         
         const addVideoStream = (video, stream) => {
