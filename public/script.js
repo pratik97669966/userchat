@@ -51,6 +51,8 @@ navigator.mediaDevices
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
+      socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
+  text.value = "";
     });
   });
 
@@ -83,10 +85,6 @@ let text = document.querySelector("#chat_message");
 let send = document.getElementById("send");
 let messages = document.querySelector(".messages");
 
-socket.on('user-connected', (user) => {
-  socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
-  text.value = "";
-});
 send.addEventListener("click", (e) => {
   if (text.value.length !== 0) {
     socket.emit("message", text.value);
