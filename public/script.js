@@ -91,8 +91,7 @@ send.addEventListener("click", (e) => {
 
 socket.on('broadcast', (number) => {
   usersCounter.innerHTML = number;
-  socket.emit("message",`<p><strong>${user}</strong> has connected!</p>`);
-  text.value = "";
+  socket.emit("message", user+ " is connected");
 });
 });
 
