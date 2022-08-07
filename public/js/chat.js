@@ -48,8 +48,12 @@ const params = new URLSearchParams(window.location.search);
               addVideoStream(video, userVideoStream);
             });
           }); 
-         });
-
+          socket.on('user-connected', (username) => {
+            displayMsg.innerHTML += `<p><strong>${username}</strong> has connected!</p>`;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            msgSound.play();
+          });
+        }); 
          const connectToNewUser = (userId, stream) => {
           const call = peer.call(userId, stream);
           const video = document.createElement("video");
@@ -74,7 +78,6 @@ const params = new URLSearchParams(window.location.search);
           });
         };
 
-        const inviteButton = document.querySelector("#inviteButton");
         const muteButton = document.querySelector("#muteButton");
         const stopVideo = document.querySelector("#stopVideo");
         muteButton.addEventListener("click", () => {
@@ -107,9 +110,6 @@ const params = new URLSearchParams(window.location.search);
           }
         });
         
-        inviteButton.addEventListener("click", (e) => {
-         
-        });
 
 sendUser.addEventListener('click', () => {
   // if (user.value === null || user.value.trim().length === 0) {
@@ -158,11 +158,7 @@ message.addEventListener('keypress', () => {
 });
 
 
-socket.on('user-connected', (username) => {
-  displayMsg.innerHTML += `<p><strong>${username}</strong> has connected!</p>`;
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-  msgSound.play();
-});
+
 
 socket.on('broadcast', (number) => {
   usersCounter.innerHTML = number;
