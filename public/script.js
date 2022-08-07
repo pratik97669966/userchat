@@ -82,7 +82,8 @@ const addVideoStream = (video, stream) => {
 let text = document.querySelector("#chat_message");
 let send = document.getElementById("send");
 let messages = document.querySelector(".messages");
-socket.on('user-connected', (username) => {
+
+socket.on('user-connected', (user) => {
   socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
   text.value = "";
 });
