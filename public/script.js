@@ -4,6 +4,7 @@ const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 const usersCounter = document.getElementById('users-counter');
+const enabled = myVideoStream.getAudioTracks()[0].enabled;
 myVideo.muted = true;
 document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
@@ -82,11 +83,12 @@ const addVideoStream = (video, stream) => {
     video.play();
      videoGrid.append(video);
     adjustWindows();
-    myVideoStream.getAudioTracks()[0].enabled = false;
-    html = `<i class="fas fa-microphone-slash"></i>`;
-    muteButton.classList.toggle("background__red");
-    muteButton.innerHTML = html;
+    
   });
+  myVideoStream.getAudioTracks()[0].enabled = false;
+  html = `<i class="fas fa-microphone-slash"></i>`;
+  muteButton.classList.toggle("background__red");
+  muteButton.innerHTML = html;
 };
 
 let text = document.querySelector("#chat_message");
@@ -115,7 +117,7 @@ const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
 const stopVideo = document.querySelector("#stopVideo");
 muteButton.addEventListener("click", () => {
-  const enabled = myVideoStream.getAudioTracks()[0].enabled;
+
   if (enabled) {
     myVideoStream.getAudioTracks()[0].enabled = false;
     html = `<i class="fas fa-microphone-slash"></i>`;
