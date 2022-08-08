@@ -115,7 +115,7 @@ text.addEventListener("keydown", (e) => {
 
 // const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
-const stopVideo = document.querySelector("#stopVideo");
+// const stopVideo = document.querySelector("#stopVideo");
 muteButton.addEventListener("click", () => {
   const enabled = myVideoStream.getAudioTracks()[0].enabled;
   if (enabled) {
@@ -131,20 +131,20 @@ muteButton.addEventListener("click", () => {
   }
 });
 
-stopVideo.addEventListener("click", () => {
-  const enabled = myVideoStream.getVideoTracks()[0].enabled;
-  if (enabled) {
-    myVideoStream.getVideoTracks()[0].enabled = false;
-    html = `<i class="fas fa-video-slash"></i>`;
-    stopVideo.classList.toggle("background__red");
-    stopVideo.innerHTML = html;
-  } else {
-    myVideoStream.getVideoTracks()[0].enabled = true;
-    html = `<i class="fas fa-video"></i>`;
-    stopVideo.classList.toggle("background__red");
-    stopVideo.innerHTML = html;
-  }
-});
+// stopVideo.addEventListener("click", () => {
+//   const enabled = myVideoStream.getVideoTracks()[0].enabled;
+//   if (enabled) {
+//     myVideoStream.getVideoTracks()[0].enabled = false;
+//     html = `<i class="fas fa-video-slash"></i>`;
+//     stopVideo.classList.toggle("background__red");
+//     stopVideo.innerHTML = html;
+//   } else {
+//     myVideoStream.getVideoTracks()[0].enabled = true;
+//     html = `<i class="fas fa-video"></i>`;
+//     stopVideo.classList.toggle("background__red");
+//     stopVideo.innerHTML = html;
+//   }
+// });
 
 // inviteButton.addEventListener("click", (e) => {
  
