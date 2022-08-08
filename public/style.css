@@ -109,7 +109,7 @@ video {
 
 .main__message_container {
   padding: 1rem;
-  display: inline;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
