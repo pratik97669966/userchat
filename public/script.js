@@ -4,7 +4,7 @@ const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 // const backBtn = document.querySelector(".header__back");
 const usersCounter = document.getElementById('users-counter');
-const inviteButton = document.querySelector("#inviteButton");
+// const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
 const stopVideo = document.querySelector("#stopVideo");
 myVideo.muted = true;
@@ -145,9 +145,9 @@ stopVideo.addEventListener("click", () => {
   }
 });
 
-inviteButton.addEventListener("click", (e) => {
+// inviteButton.addEventListener("click", (e) => {
  
-});
+// });
 
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
