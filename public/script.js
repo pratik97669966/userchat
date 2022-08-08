@@ -4,9 +4,6 @@ const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
 const backBtn = document.querySelector(".header__back");
 const usersCounter = document.getElementById('users-counter');
-const inviteButton = document.querySelector("#inviteButton");
-const muteButton = document.querySelector("#muteButton");
-const stopVideo = document.querySelector("#stopVideo");
 myVideo.muted = true;
 document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
@@ -52,9 +49,9 @@ navigator.mediaDevices
       });
       stream.getAudioTracks()[0].enabled = false;
       myVideoStream.getAudioTracks()[0].enabled = false;
-      html = `<i class="fas fa-microphone-slash"></i>`;
-      muteButton.classList.toggle("background__red");
-      muteButton.innerHTML = html;
+       html = `<i class="fas fa-microphone-slash"></i>`;
+    muteButton.classList.toggle("background__red");
+    muteButton.innerHTML = html;
     });
 
     socket.on("user-connected", (userId) => {
@@ -116,7 +113,9 @@ text.addEventListener("keydown", (e) => {
   }
 });
 
-
+const inviteButton = document.querySelector("#inviteButton");
+const muteButton = document.querySelector("#muteButton");
+const stopVideo = document.querySelector("#stopVideo");
 muteButton.addEventListener("click", () => {
   const enabled = myVideoStream.getAudioTracks()[0].enabled;
   if (enabled) {
