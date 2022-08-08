@@ -35,7 +35,6 @@
 
 .main__left {
   flex: 0.7;
-  height: auto;
   display: flex;
   flex-direction: column;
 }
@@ -94,7 +93,6 @@ video {
 
 .main__right {
   display: flex;
-  height: auto;
   flex-direction: column;
   flex: 0.3;
   background-color: #242f41;

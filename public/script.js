@@ -1,28 +1,30 @@
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
-// const showChat = document.querySelector("#showChat");
-// const backBtn = document.querySelector(".header__back");
+const showChat = document.querySelector("#showChat");
+const backBtn = document.querySelector(".header__back");
 const usersCounter = document.getElementById('users-counter');
-// const inviteButton = document.querySelector("#inviteButton");
+const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
 const stopVideo = document.querySelector("#stopVideo");
 myVideo.muted = true;
 document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
+  document.querySelector(".main__left").style.display = "none";
   document.querySelector(".header__back").style.display = "block";
-// backBtn.addEventListener("click", () => {
-//   document.querySelector(".main__left").style.display = "flex";
-//   document.querySelector(".main__left").style.flex = "1";
-//   document.querySelector(".main__right").style.display = "none";
-//   document.querySelector(".header__back").style.display = "none";
-// });
+backBtn.addEventListener("click", () => {
+  document.querySelector(".main__left").style.display = "flex";
+  document.querySelector(".main__left").style.flex = "1";
+  document.querySelector(".main__right").style.display = "none";
+  document.querySelector(".header__back").style.display = "none";
+});
 
-// showChat.addEventListener("click", () => {
-//   document.querySelector(".main__right").style.display = "flex";
-//   document.querySelector(".main__right").style.flex = "1";
-//   document.querySelector(".header__back").style.display = "block";
-// });
+showChat.addEventListener("click", () => {
+  document.querySelector(".main__right").style.display = "flex";
+  document.querySelector(".main__right").style.flex = "1";
+  document.querySelector(".main__left").style.display = "none";
+  document.querySelector(".header__back").style.display = "block";
+});
 const params = new URLSearchParams(window.location.search);
 const user = params.get('userName');
 
@@ -145,9 +147,9 @@ stopVideo.addEventListener("click", () => {
   }
 });
 
-// inviteButton.addEventListener("click", (e) => {
+inviteButton.addEventListener("click", (e) => {
  
-// });
+});
 
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
