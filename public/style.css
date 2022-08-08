@@ -35,6 +35,7 @@
 
 .main__left {
   flex: 0.7;
+  height: auto;
   display: flex;
   flex-direction: column;
 }
