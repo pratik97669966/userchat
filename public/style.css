@@ -116,7 +116,7 @@ video {
 
 .main__message_container > input {
   height: 50px;
-  /* flex: 1; */
+  flex: 1; 
   font-size: 1rem;
   border-radius: 5px;
   padding-left: 20px;
