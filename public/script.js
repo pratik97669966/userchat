@@ -10,7 +10,6 @@ const stopVideo = document.querySelector("#stopVideo");
 myVideo.muted = true;
 document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
-  document.querySelector(".main__left").style.display = "none";
   document.querySelector(".header__back").style.display = "block";
 // backBtn.addEventListener("click", () => {
 //   document.querySelector(".main__left").style.display = "flex";
@@ -22,7 +21,6 @@ document.querySelector(".main__right").style.display = "flex";
 showChat.addEventListener("click", () => {
   document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
-  document.querySelector(".main__left").style.display = "none";
   document.querySelector(".header__back").style.display = "block";
 });
 const params = new URLSearchParams(window.location.search);
