@@ -47,6 +47,11 @@ navigator.mediaDevices
       call.on("stream", (userVideoStream) => {
         addVideoStream(video, userVideoStream);
       });
+      stream.getAudioTracks()[0].enabled = false;
+      myVideoStream.getAudioTracks()[0].enabled = false;
+      html = `<i class="fas fa-microphone-slash"></i>`;
+      muteButton.classList.toggle("background__red");
+      muteButton.innerHTML = html;
     });
 
     socket.on("user-connected", (userId) => {
@@ -111,13 +116,8 @@ text.addEventListener("keydown", (e) => {
 const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
 const stopVideo = document.querySelector("#stopVideo");
-const enabled = myVideoStream.getAudioTracks()[0].enabled;
-myVideoStream.getAudioTracks()[0].enabled = false;
-html = `<i class="fas fa-microphone-slash"></i>`;
-muteButton.classList.toggle("background__red");
-muteButton.innerHTML = html;
 muteButton.addEventListener("click", () => {
-  
+  const enabled = myVideoStream.getAudioTracks()[0].enabled;
   if (enabled) {
     myVideoStream.getAudioTracks()[0].enabled = false;
     html = `<i class="fas fa-microphone-slash"></i>`;
