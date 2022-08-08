@@ -94,6 +94,7 @@ video {
 
 .main__right {
   display: flex;
+  height: auto;
   flex-direction: column;
   flex: 0.3;
   background-color: #242f41;
