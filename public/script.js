@@ -2,7 +2,7 @@ const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
 const showChat = document.querySelector("#showChat");
-const backBtn = document.querySelector(".header__back");
+// const backBtn = document.querySelector(".header__back");
 const usersCounter = document.getElementById('users-counter');
 const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
@@ -12,12 +12,12 @@ document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
   document.querySelector(".main__left").style.display = "none";
   document.querySelector(".header__back").style.display = "block";
-backBtn.addEventListener("click", () => {
-  document.querySelector(".main__left").style.display = "flex";
-  document.querySelector(".main__left").style.flex = "1";
-  document.querySelector(".main__right").style.display = "none";
-  document.querySelector(".header__back").style.display = "none";
-});
+// backBtn.addEventListener("click", () => {
+//   document.querySelector(".main__left").style.display = "flex";
+//   document.querySelector(".main__left").style.flex = "1";
+//   document.querySelector(".main__right").style.display = "none";
+//   document.querySelector(".header__back").style.display = "none";
+// });
 
 showChat.addEventListener("click", () => {
   document.querySelector(".main__right").style.display = "flex";
