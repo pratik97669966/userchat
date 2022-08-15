@@ -147,7 +147,10 @@ muteButton.addEventListener("click", () => {
 // inviteButton.addEventListener("click", (e) => {
  
 // });
-
+socket.on("disconnect", () => {
+  usersNum -= 1;
+  socket.emit('broadcast', `Online: ${usersNum}`);
+});
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
     messages.innerHTML +
