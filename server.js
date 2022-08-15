@@ -27,9 +27,7 @@ app.get("/:room", (req, res) => {
 
 io.on("connection", (socket) => {
   usersNum += 1;
-  io.on('new-user', (username) => {
-    io.emit('broadcast', `Online: ${usersNum}`);
-  });
+  io.emit('broadcast', `Online: ${usersNum}`);
 
   socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
