@@ -36,9 +36,10 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
   });
-});
+
 io.on("disconnect", () => {
   usersNum -= 1;
   io.emit('broadcast', `Online: ${usersNum}`);
+});
 });
 server.listen(process.env.PORT || 3030);
