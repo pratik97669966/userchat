@@ -36,5 +36,10 @@ io.on("connection", (socket) => {
     });
   });
 });
+io.on('disconnect', () => {
+  usersNum -= 1;
+  io.emit('broadcast', `Online: ${usersNum}`);
+  io.broadcast.emit('user-disconnected', users[socket.id]);
 
+});
 server.listen(process.env.PORT || 3030);
