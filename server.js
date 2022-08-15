@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
     });
   });
 });
-io.on('disconnect', () => {
+io.on("disconnect", () => {
   usersNum -= 1;
   io.emit('broadcast', `Online: ${usersNum}`);
 });
