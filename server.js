@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+let usersNum = 0;
 const server = require("http").Server(app);
 const { v4: uuidv4 } = require("uuid");
 app.set("view engine", "ejs");
@@ -25,6 +26,11 @@ app.get("/:room", (req, res) => {
 });
 
 io.on("connection", (socket) => {
+  usersNum += 1;
+  io.on('new-user', (username) => {
+    io.emit('broadcast', `Online: ${usersNum}`);
+  });
+
   socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
     socket.to(roomId).broadcast.emit("user-connected", userId);
@@ -33,5 +39,8 @@ io.on("connection", (socket) => {
     });
   });
 });
-
+socket.on('disconnect', () => {
+  usersNum -= 1;
+  io.emit('broadcast', `Online: ${usersNum}`);
+});
 server.listen(process.env.PORT || 3030);
