@@ -40,6 +40,6 @@ socket.on('disconnect', () => {
   usersNum -= 1;
   io.emit('broadcast', `Online: ${usersNum}`);
   socket.broadcast.emit('user-disconnected', users[socket.id]);
-  delete users[socket.id];
+
 });
 server.listen(process.env.PORT || 3030);
