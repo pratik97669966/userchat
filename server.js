@@ -36,9 +36,10 @@ io.on("connection", (socket) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
   });
-
-  socket.on("disconnect", () => {
+  
+  socket.on("disconnect", (roomId, userId, userName) => {
   usersNum -= 1;
+  socket.to(roomId).broadcast.emit("user-disconnected", userId);
   io.emit('broadcast', `Online: ${usersNum}`);
 });
 });
