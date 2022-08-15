@@ -3,7 +3,8 @@ const app = express();
 const server = require("http").Server(app);
 const { v4: uuidv4 } = require("uuid");
 app.set("view engine", "ejs");
-const users = {};
+let usersNum = 0;
+
 const io = require("socket.io")(server, {
   cors: {
     origin: '*'
@@ -37,9 +38,9 @@ io.on("connection", (socket) => {
   });
 });
 io.on('disconnect', () => {
-  
-  io.broadcast.emit('user-disconnected', users[socket.id]);
   usersNum -= 1;
   io.emit('broadcast', `Online: ${usersNum}`);
+  io.broadcast.emit('user-disconnected', users[socket.id]);
+
 });
 server.listen(process.env.PORT || 3030);
