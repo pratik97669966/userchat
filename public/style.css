@@ -185,7 +185,6 @@ video {
 #users-counter {
   font-size: 18px;
   display: inline-block;
-  width: 100%;
   text-align: center;
   position: -webkit-sticky;
   position: sticky;
