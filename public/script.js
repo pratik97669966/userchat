@@ -56,7 +56,6 @@ navigator.mediaDevices
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
-      socket.emit('new-user', user);
       socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
   text.value = "";
     });
