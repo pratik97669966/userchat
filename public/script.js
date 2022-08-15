@@ -24,7 +24,7 @@ document.querySelector(".main__right").style.display = "flex";
 // });
 const params = new URLSearchParams(window.location.search);
 const user = params.get('userName');
-socket.emit('new-user', user);
+
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
@@ -56,6 +56,7 @@ navigator.mediaDevices
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
+      socket.emit('new-user', user);
       socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
   text.value = "";
     });
