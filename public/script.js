@@ -70,8 +70,7 @@ const connectToNewUser = (userId, stream) => {
   });
 };
 socket.on('user-disconnected', (userId) => {
-  usersNum -= 1;
-  io.emit('broadcast', `Online: ${usersNum}`);
+
   if (user == null) {
     socket.emit("message", `user has Disconnected !`);
   text.value = "";
