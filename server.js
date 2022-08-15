@@ -3,6 +3,7 @@ const app = express();
 const server = require("http").Server(app);
 const { v4: uuidv4 } = require("uuid");
 app.set("view engine", "ejs");
+let usersNum = 0;
 const io = require("socket.io")(server, {
   cors: {
     origin: '*'
@@ -25,9 +26,11 @@ app.get("/:room", (req, res) => {
 });
 
 io.on("connection", (socket) => {
+  usersNum += 1;
   socket.on("join-room", (roomId, userId, userName) => {
+    io.emit('broadcast', `Online: ${usersNum}`);
     socket.join(roomId);
-    socket.to(roomId).broadcast.emit("user-connected", userId);
+
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName);
     });

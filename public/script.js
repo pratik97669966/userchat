@@ -5,6 +5,7 @@ const myVideo = document.createElement("video");
 // const backBtn = document.querySelector(".header__back");
 const usersCounter = document.getElementById('users-counter');
 myVideo.muted = true;
+let usersNum = 0;
 document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
   document.querySelector(".main__left").style.display = "none";
@@ -69,6 +70,8 @@ const connectToNewUser = (userId, stream) => {
   });
 };
 socket.on('user-disconnected', (userId) => {
+  usersNum -= 1;
+  io.emit('broadcast', `Online: ${usersNum}`);
   if (user == null) {
     socket.emit("message", `user has Disconnected !`);
   text.value = "";
@@ -162,47 +165,10 @@ socket.on("createMessage", (message, userName) => {
     var myMessage = document.getElementsByClassName("main__chat_window")[0];
 			myMessage.scrollTop = myMessage.scrollHeight;
 });
-// santosh added
-
-      //  $(document).ready(function(){
-      //      //alert("Hi");
-           
-          // $("#btnAddWindow").click(function(){   
-          //   var cnt = $('.mainContainer .item').length;
-          //   if(cnt != 6) {
-          //       $('.mainContainer').append('<div class="item" style="flex-basis: 90%;">&nbsp;</div>');
-          //       adjustWindows();
-          //   }
-          //   else{
-          //       alert("Char room is full...!");
-          //   }
-          // });
-
-          // $("#btnRemoveWindow").click(function(){
-          //   //$("div p:nth-child(2)").css("background-color", "yellow");
-          //   var cnt = $('.mainContainer .item').length;
-          //   //alert(cnt);
-          //   if(cnt > 0) {
-          //       $(".mainContainer .item:nth-child(1)").remove();
-          //       adjustWindows();
-          //   }
-          //   else {
-          //       alert("No window delete");
-          //   }
-          // });
-
-        // });
 
         function adjustWindows()
         {
             var cnt = $('#video-grid video').length;
-            // if(cnt == 0)
-            // {
-            //     alert("No windows available");
-            // }
-            // else
-            // {
-            //     alert("No of windows: " + cnt);
                 if(cnt == 1) {
                     $("#video-grid video:nth-child(1)").css("flex-basis", "90%");
                     return;
@@ -247,4 +213,3 @@ socket.on("createMessage", (message, userName) => {
                     return;  
                 }
             }
-        // }

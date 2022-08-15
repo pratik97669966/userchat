@@ -190,7 +190,7 @@ video {
   position: sticky;
   top: 0;
   background-color: var(--second-color);
-  color: var(--text-color);
+  color: #fff;
 }
 
 #you-joined {
