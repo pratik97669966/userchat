@@ -71,8 +71,10 @@ const connectToNewUser = (userId, stream) => {
 socket.on('user-disconnected', (userId) => {
   if (user == null) {
     socket.emit("message", `user has Disconnected !`);
+  text.value = "";
   } else {
     socket.emit("message", `<p><strong>${user}</strong> has Disconnected !</p>`);
+  text.value = "";
   }
 });
 peer.on("open", (id) => {
@@ -147,6 +149,7 @@ muteButton.addEventListener("click", () => {
 // inviteButton.addEventListener("click", (e) => {
  
 // });
+
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
     messages.innerHTML +
