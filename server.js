@@ -2,12 +2,14 @@ const express = require("express");
 const app = express();
 const server = require("http").Server(app);
 const { v4: uuidv4 } = require("uuid");
+let usersNum = 0;
 app.set("view engine", "ejs");
 const io = require("socket.io")(server, {
   cors: {
     origin: '*'
   }
 });
+
 const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
   debug: true,
@@ -24,13 +26,25 @@ app.get("/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
 
-io.on("connection", (socket) => {
+io.on('connection', (socket) => {
+
+  socket.on('new-user', (username) => {
+    usersNum += 1;
+    io.emit('broadcast', `Online: ${usersNum}`);
+    users[socket.id] = username;
+    socket.broadcast.emit('user-connected', username);
+  });
+
   socket.on("join-room", (roomId, userId, userName) => {
     socket.join(roomId);
-    socket.to(roomId).broadcast.emit("user-disconnected", userId);
     socket.on("message", (message) => {
       io.to(roomId).emit("createMessage", message, userName);
     });
+  });
+  socket.on('disconnect', () => {
+    usersNum -= 1;
+    io.emit('broadcast', `Online: ${usersNum}`);
+    socket.to(roomId).broadcast.emit("user-disconnected", userId);
   });
 });
 
