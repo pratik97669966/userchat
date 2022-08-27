@@ -84,7 +84,7 @@ video {
   color: var(--main-light);
   font-size: 1.2rem;
   width: 50px;
-  margin: 0 0.5rem;
+  /* margin: 0 0.5rem; */
 }
 
 .background__red {
