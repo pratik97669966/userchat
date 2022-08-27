@@ -17,7 +17,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 0vh;
+  height: 0%;
   position: relative;
   width: 100%;
   background-color: var(--main-darklg);
