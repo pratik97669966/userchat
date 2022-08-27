@@ -56,8 +56,7 @@ navigator.mediaDevices
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
-      socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
-  text.value = "";
+      // socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
     });
   });
 
@@ -73,8 +72,7 @@ socket.on('user-disconnected', (userId) => {
     socket.emit("message", `user has Disconnected !`);
   text.value = "";
   } else {
-    socket.emit("message", `<p><strong>${user}</strong> has Disconnected !</p>`);
-  text.value = "";
+    // socket.emit("message", `<p><strong>${user}</strong> has Disconnected !</p>`);
   }
 });
 peer.on("open", (id) => {
