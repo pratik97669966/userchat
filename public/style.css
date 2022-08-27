@@ -120,7 +120,7 @@ video {
   font-size: 1rem;
   border-radius: 5px;
   padding-left: 20px;
-  border: none;
+  border: 1;
 }
 
 .messages {
