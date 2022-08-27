@@ -95,7 +95,7 @@ video {
   display: flex;
   flex-direction: column;
   flex: 0.3;
-  background-color: #242f41;
+  background-color: #ffffff;
 }
 
 .main__chat_window {
@@ -135,7 +135,7 @@ video {
 }
 
 .message > b {
-  color: #eeeeee;
+  color: #000000;
   display: flex;
   align-items: center;
   text-transform: capitalize;
@@ -147,7 +147,7 @@ video {
 }
 
 .message > span {
-  background-color: #eeeeee;
+  background-color: #88b4a4;
   margin: 1rem 0;
   padding: 1rem;
   border-radius: 5px;
