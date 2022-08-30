@@ -1,27 +1,27 @@
 const socket = io("/");
 const videoGrid = document.getElementById("video-grid");
 const myVideo = document.createElement("video");
-const showChat = document.querySelector("#showChat");
-const backBtn = document.querySelector(".header__back");
+// const showChat = document.querySelector("#showChat");
+// const backBtn = document.querySelector(".header__back");
 const usersCounter = document.getElementById('users-counter');
 myVideo.muted = true;
 document.querySelector(".main__right").style.display = "flex";
   document.querySelector(".main__right").style.flex = "1";
   document.querySelector(".main__left").style.display = "none";
-  document.querySelector(".header__back").style.display = "block";
-backBtn.addEventListener("click", () => {
-  document.querySelector(".main__left").style.display = "flex";
-  document.querySelector(".main__left").style.flex = "1";
-  document.querySelector(".main__right").style.display = "none";
-  document.querySelector(".header__back").style.display = "none";
-});
+  // document.querySelector(".header__back").style.display = "block";
+// backBtn.addEventListener("click", () => {
+//   document.querySelector(".main__left").style.display = "flex";
+//   document.querySelector(".main__left").style.flex = "1";
+//   document.querySelector(".main__right").style.display = "none";
+//   document.querySelector(".header__back").style.display = "none";
+// });
 
-showChat.addEventListener("click", () => {
-  document.querySelector(".main__right").style.display = "flex";
-  document.querySelector(".main__right").style.flex = "1";
-  document.querySelector(".main__left").style.display = "none";
-  document.querySelector(".header__back").style.display = "block";
-});
+// showChat.addEventListener("click", () => {
+//   document.querySelector(".main__right").style.display = "flex";
+//   document.querySelector(".main__right").style.flex = "1";
+//   document.querySelector(".main__left").style.display = "none";
+//   document.querySelector(".header__back").style.display = "block";
+// });
 const params = new URLSearchParams(window.location.search);
 const user = params.get('userName');
 
@@ -47,12 +47,16 @@ navigator.mediaDevices
       call.on("stream", (userVideoStream) => {
         addVideoStream(video, userVideoStream);
       });
+      stream.getAudioTracks()[0].enabled = false;
+      myVideoStream.getAudioTracks()[0].enabled = false;
+      html = `<i class="fas fa-microphone-slash"></i>`;
+      muteButton.classList.toggle("background__red");
+      muteButton.innerHTML = html;
     });
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
-      socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
-  text.value = "";
+       socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
     });
   });
 
@@ -63,7 +67,14 @@ const connectToNewUser = (userId, stream) => {
     addVideoStream(video, userVideoStream);
   });
 };
-
+socket.on('user-disconnected', (userId) => {
+  if (user == null) {
+    socket.emit("message", `user has Disconnected !`);
+  text.value = "";
+  } else {
+    socket.emit("message", `<p><strong>${user}</strong> has Disconnected !</p>`);
+  }
+});
 peer.on("open", (id) => {
   socket.emit("join-room", ROOM_ID, id, user);
 });
@@ -74,10 +85,7 @@ const addVideoStream = (video, stream) => {
     video.play();
      videoGrid.append(video);
     adjustWindows();
-    myVideoStream.getAudioTracks()[0].enabled = false;
-    html = `<i class="fas fa-microphone-slash"></i>`;
-    muteButton.classList.toggle("background__red");
-    muteButton.innerHTML = html;
+    
   });
 };
 
@@ -103,9 +111,9 @@ text.addEventListener("keydown", (e) => {
   }
 });
 
-const inviteButton = document.querySelector("#inviteButton");
+// const inviteButton = document.querySelector("#inviteButton");
 const muteButton = document.querySelector("#muteButton");
-const stopVideo = document.querySelector("#stopVideo");
+// const stopVideo = document.querySelector("#stopVideo");
 muteButton.addEventListener("click", () => {
   const enabled = myVideoStream.getAudioTracks()[0].enabled;
   if (enabled) {
@@ -121,30 +129,30 @@ muteButton.addEventListener("click", () => {
   }
 });
 
-stopVideo.addEventListener("click", () => {
-  const enabled = myVideoStream.getVideoTracks()[0].enabled;
-  if (enabled) {
-    myVideoStream.getVideoTracks()[0].enabled = false;
-    html = `<i class="fas fa-video-slash"></i>`;
-    stopVideo.classList.toggle("background__red");
-    stopVideo.innerHTML = html;
-  } else {
-    myVideoStream.getVideoTracks()[0].enabled = true;
-    html = `<i class="fas fa-video"></i>`;
-    stopVideo.classList.toggle("background__red");
-    stopVideo.innerHTML = html;
-  }
-});
+// stopVideo.addEventListener("click", () => {
+//   const enabled = myVideoStream.getVideoTracks()[0].enabled;
+//   if (enabled) {
+//     myVideoStream.getVideoTracks()[0].enabled = false;
+//     html = `<i class="fas fa-video-slash"></i>`;
+//     stopVideo.classList.toggle("background__red");
+//     stopVideo.innerHTML = html;
+//   } else {
+//     myVideoStream.getVideoTracks()[0].enabled = true;
+//     html = `<i class="fas fa-video"></i>`;
+//     stopVideo.classList.toggle("background__red");
+//     stopVideo.innerHTML = html;
+//   }
+// });
 
-inviteButton.addEventListener("click", (e) => {
+// inviteButton.addEventListener("click", (e) => {
  
-});
+// });
 
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
     messages.innerHTML +
     `<div class="message">
-        <b><i class="far fa-user-circle"></i> <span> ${
+        <b><span> ${
            userName
         }</span> </b>
         <span>${message}</span>
