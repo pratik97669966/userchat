@@ -159,16 +159,6 @@ video {
   justify-content: top;
   overflow-x: auto;
   overflow-y: auto;
-    /* Santosh get chenges */
-    /* display: flex;
-    flex-wrap: wrap;   
-    flex-direction: row;
-    justify-content: center ; */
-  /* santosh chenges */
-  /* border: dotted 5px rgb(92, 9, 9);
-  background-color: rgb(221, 132, 68);
-  margin: 2px 2px 2px 2px; */
-
 }
 
 #showChat {
@@ -208,7 +198,6 @@ video {
   }
   .main__left {
     width: 100%;
-    /* flex: 1; */
   }
 
   video {
