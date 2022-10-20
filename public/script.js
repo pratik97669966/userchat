@@ -31,11 +31,16 @@ navigator.mediaDevices
       call.on("stream", (userVideoStream) => {
         addVideoStream(video, userVideoStream);
       });
+      stream.getAudioTracks()[0].enabled = false;
+      myVideoStream.getAudioTracks()[0].enabled = false;
+      html = `<i class="fas fa-microphone-slash"></i>`;
+      muteButton.classList.toggle("background__red");
+      muteButton.innerHTML = html;
     });
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
-     //  socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
+       socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
     });
   });
 
@@ -90,30 +95,24 @@ text.addEventListener("keydown", (e) => {
   }
 });
 
-function toggleAudio(b) {
-  if (b == "true") {
-    myVideoStream.getAudioTracks()[0].enabled = true;
-  } else {
-    myVideoStream.getAudioTracks()[0].enabled = false;
-  }
-}
+
 // const inviteButton = document.querySelector("#inviteButton");
-// const muteButton = document.querySelector("#muteButton");
+const muteButton = document.querySelector("#muteButton");
 // const stopVideo = document.querySelector("#stopVideo");
-// muteButton.addEventListener("click", () => {
-//   const enabled = myVideoStream.getAudioTracks()[0].enabled;
-//   if (enabled) {
-//     myVideoStream.getAudioTracks()[0].enabled = false;
-//     html = `<i class="fas fa-microphone-slash"></i>`;
-//     muteButton.classList.toggle("background__red");
-//     muteButton.innerHTML = html;
-//   } else {
-//     myVideoStream.getAudioTracks()[0].enabled = true;
-//     html = `<i class="fas fa-microphone"></i>`;
-//     muteButton.classList.toggle("background__red");
-//     muteButton.innerHTML = html;
-//   }
-// });
+muteButton.addEventListener("click", () => {
+  const enabled = myVideoStream.getAudioTracks()[0].enabled;
+  if (enabled) {
+    myVideoStream.getAudioTracks()[0].enabled = false;
+    html = `<i class="fas fa-microphone-slash"></i>`;
+    muteButton.classList.toggle("background__red");
+    muteButton.innerHTML = html;
+  } else {
+    myVideoStream.getAudioTracks()[0].enabled = true;
+    html = `<i class="fas fa-microphone"></i>`;
+    muteButton.classList.toggle("background__red");
+    muteButton.innerHTML = html;
+  }
+});
 
 // stopVideo.addEventListener("click", () => {
 //   const enabled = myVideoStream.getVideoTracks()[0].enabled;
