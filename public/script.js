@@ -4,8 +4,8 @@ const myVideo = document.createElement("video");
 const usersCounter = document.getElementById('users-counter');
 myVideo.muted = true;
 document.querySelector(".main__right").style.display = "flex";
-  document.querySelector(".main__right").style.flex = "1";
-  document.querySelector(".main__left").style.display = "none";
+document.querySelector(".main__right").style.flex = "1";
+document.querySelector(".main__left").style.display = "none";
 const params = new URLSearchParams(window.location.search);
 const user = params.get('userName');
 
@@ -48,7 +48,7 @@ const connectToNewUser = (userId, stream) => {
 socket.on('user-disconnected', (userId) => {
   if (user == null) {
     socket.emit("message", `user has Disconnected !`);
-  text.value = "";
+    text.value = "";
   } else {
     socket.emit("message", `<p><strong>${user}</strong> has Disconnected !</p>`);
   }
@@ -61,9 +61,7 @@ const addVideoStream = (video, stream) => {
   video.srcObject = stream;
   video.addEventListener("loadedmetadata", () => {
     video.play();
-     videoGrid.append(video);
-    adjustWindows();
-    
+    videoGrid.append(video);
   });
 };
 
@@ -101,11 +99,10 @@ socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
     messages.innerHTML +
     `<div class="message">
-        <b><span> ${
-           userName
-        }</span> </b>
+        <b><span> ${userName
+    }</span> </b>
         <span>${message}</span>
     </div>`;
-    var myMessage = document.getElementsByClassName("main__chat_window")[0];
-			myMessage.scrollTop = myMessage.scrollHeight;
+  var myMessage = document.getElementsByClassName("main__chat_window")[0];
+  myMessage.scrollTop = myMessage.scrollHeight;
 });
