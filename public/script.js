@@ -31,16 +31,10 @@ navigator.mediaDevices
       call.on("stream", (userVideoStream) => {
         addVideoStream(video, userVideoStream);
       });
-      stream.getAudioTracks()[0].enabled = false;
-      myVideoStream.getAudioTracks()[0].enabled = false;
-      html = `<i class="fas fa-microphone-slash"></i>`;
-      muteButton.classList.toggle("background__red");
-      muteButton.innerHTML = html;
     });
 
     socket.on("user-connected", (userId) => {
       connectToNewUser(userId, stream);
-       socket.emit("message", `<p><strong>${user}</strong> has connected!</p>`);
     });
   });
 
@@ -95,43 +89,13 @@ text.addEventListener("keydown", (e) => {
   }
 });
 
-
-// const inviteButton = document.querySelector("#inviteButton");
-const muteButton = document.querySelector("#muteButton");
-// const stopVideo = document.querySelector("#stopVideo");
-muteButton.addEventListener("click", () => {
-  const enabled = myVideoStream.getAudioTracks()[0].enabled;
-  if (enabled) {
-    myVideoStream.getAudioTracks()[0].enabled = false;
-    html = `<i class="fas fa-microphone-slash"></i>`;
-    muteButton.classList.toggle("background__red");
-    muteButton.innerHTML = html;
-  } else {
+function toggleAudio(b) {
+  if (b == "true") {
     myVideoStream.getAudioTracks()[0].enabled = true;
-    html = `<i class="fas fa-microphone"></i>`;
-    muteButton.classList.toggle("background__red");
-    muteButton.innerHTML = html;
+  } else {
+    myVideoStream.getAudioTracks()[0].enabled = false;
   }
-});
-
-// stopVideo.addEventListener("click", () => {
-//   const enabled = myVideoStream.getVideoTracks()[0].enabled;
-//   if (enabled) {
-//     myVideoStream.getVideoTracks()[0].enabled = false;
-//     html = `<i class="fas fa-video-slash"></i>`;
-//     stopVideo.classList.toggle("background__red");
-//     stopVideo.innerHTML = html;
-//   } else {
-//     myVideoStream.getVideoTracks()[0].enabled = true;
-//     html = `<i class="fas fa-video"></i>`;
-//     stopVideo.classList.toggle("background__red");
-//     stopVideo.innerHTML = html;
-//   }
-// });
-
-// inviteButton.addEventListener("click", (e) => {
- 
-// });
+}
 
 socket.on("createMessage", (message, userName) => {
   messages.innerHTML =
@@ -145,52 +109,3 @@ socket.on("createMessage", (message, userName) => {
     var myMessage = document.getElementsByClassName("main__chat_window")[0];
 			myMessage.scrollTop = myMessage.scrollHeight;
 });
-   function adjustWindows()
-        {
-            var cnt = $('#video-grid video').length;
-      
-                if(cnt == 1) {
-                    $("#video-grid video:nth-child(1)").css("flex-basis", "90%");
-                    return;
-                }
-                else if(cnt == 2) {
-                    $("#video-grid video:nth-child(1)").css("flex-basis", "90%");
-                    $("#video-grid video:nth-child(2)").css("flex-basis", "90%");
-                    return;
-                }
-                else if(cnt == 3)
-                {
-                    $("#video-grid video:nth-child(1)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(2)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(3)").css("flex-basis", "90%");
-                    return;
-                }
-                else if(cnt == 4)
-                {
-                    $("#video-grid video:nth-child(1)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(2)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(3)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(4)").css("flex-basis", "45%");
-                    return;  
-                }
-                else if(cnt == 5)
-                {
-                    $("#video-grid video:nth-child(1)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(2)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(3)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(4)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(5)").css("flex-basis", "90%");
-                    return;  
-                }
-                else if(cnt == 6)
-                {
-                    $("#video-grid video:nth-child(1)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(2)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(3)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(4)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(5)").css("flex-basis", "45%");
-                    $("#video-grid video:nth-child(6)").css("flex-basis", "45%");
-                    return;  
-                }
-            }
-        // }
