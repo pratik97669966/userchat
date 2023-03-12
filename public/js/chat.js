@@ -17,7 +17,7 @@ var userName = "";
 var userNametrs = "";
 
 const params = new URLSearchParams(window.location.search);
-userName = params.get('userName').slice(0, -28);
+userName = params.get('userName');
 chat.style.display = 'block';
 // join.innerHTML = '<p>Welcome ' + userName + '<p>';
 socket.emit('new-user', userName);
