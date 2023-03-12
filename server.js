@@ -43,6 +43,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
 
       // Add a new user to the database
       socket.on('new-user', (user) => {
+        user.socketId = socket.id;
         usersCollection.insertOne(user)
           .then(() => {
             console.log(`User ${user.name} added to MongoDB`);
@@ -59,6 +60,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
 
       // Remove a user from the database
       socket.on('disconnect', () => {
+        console.log(`User ${socket.id} Want to remove from MongoDB`);
         usersCollection.findOneAndDelete({ id: socket.id })
           .then((result) => {
             const user = result.value;
