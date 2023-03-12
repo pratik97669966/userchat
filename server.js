@@ -43,7 +43,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
 
       // Add a new user to the database
       socket.on('new-user', (user) => {
-        user.socketId = socket.id;
+        user.id = socket.id;
         usersCollection.insertOne(user)
           .then(() => {
             console.log(`User ${user.name} added to MongoDB`);
