@@ -1,37 +1,36 @@
-const express = require("express");
+const express = require('express');
+const http = require('http');
+const socketio = require('socket.io');
+
 const app = express();
-const server = require("http").Server(app);
-const { v4: uuidv4 } = require("uuid");
-app.set("view engine", "ejs");
-const io = require("socket.io")(server, {
-  cors: {
-    origin: '*'
-  }
-});
-const { ExpressPeerServer } = require("peer");
-const peerServer = ExpressPeerServer(server, {
-  debug: true,
-});
+const server = http.createServer(app);
+const io = socketio(server);
 
-app.use("/peerjs", peerServer);
-app.use(express.static("public"));
+// Keep track of connected users
+const connectedUsers = new Map();
 
-app.get("/", (req, res) => {
-  res.redirect(`/${uuidv4()}`);
-});
+// Handle new connections
+io.on('connection', (socket) => {
+  console.log('New user connected:', socket.id);
 
-app.get("/:room", (req, res) => {
-  res.render("room", { roomId: req.params.room });
-});
+  // Add the user to the list of connected users
+  connectedUsers.set(socket.id, { id: socket.id });
 
-io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, userName) => {
-    socket.join(roomId);
-    socket.to(roomId).broadcast.emit("user-connected", userId);
-    socket.on("message", (message) => {
-      io.to(roomId).emit("createMessage", message, userName);
-    });
+  // Send the updated list of users to all connected clients
+  io.emit('users', Array.from(connectedUsers.values()));
+
+  // Listen for disconnections
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+
+    // Remove the user from the list of connected users
+    connectedUsers.delete(socket.id);
+
+    // Send the updated list of users to all connected clients
+    io.emit('users', Array.from(connectedUsers.values()));
   });
 });
 
-server.listen(process.env.PORT || 3030);
+server.listen(3000, () => {
+  console.log('Server listening on port 3000');
+});
