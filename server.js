@@ -57,21 +57,23 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
         socket.broadcast.emit('is-typing', username);
       });
 
-      // Remove a user from the database
-      socket.on('disconnect', () => {
-        usersCollection.findOneAndDelete({ id: socket.id })
-          .then((result) => {
-            const user = result.value;
-            if (user) {
-              console.log(`User ${user.name} removed from MongoDB`);
-              sendUsersList(io);
-            }
-          })
-          .catch((err) => {
-            console.log('Error removing user from MongoDB:', err);
-          });
-      });
+    // Remove a user from the database
+socket.on('disconnect', () => {
+  console.log(`Socket disconnected: ${socket.id}`);
+
+  // Find the user in the database and remove them
+  usersCollection.findOneAndDelete({ id: socket.id })
+    .then((result) => {
+      const user = result.value;
+      if (user) {
+        console.log(`User ${user.name} removed from MongoDB`);
+        sendUsersList(io);
+      }
+    })
+    .catch((err) => {
+      console.log('Error removing user from MongoDB:', err);
     });
+});
 
     server.listen(PORT, () => {
       console.log(`The server is Listening on http://localhost:${PORT} \nPID: ${PID}\n`);
