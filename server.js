@@ -6048,7 +6048,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
         usersCollection.insertOne(user)
           .then(() => {
             console.log(`User ${user.name} added to MongoDB`);
-            sendUsersList(io);
+            socket.emit('user-add', user);
           })
           .catch((err) => {
             console.log('Error adding user to MongoDB:', err);
@@ -6079,8 +6079,8 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
           .then((result) => {
             const user = result.value;
             if (user) {
+              socket.emit('user-removed', user);
               console.log(`User ${user.name} removed from MongoDB`);
-              sendUsersList(io);
             }
           })
           .catch((err) => {
