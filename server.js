@@ -14,6 +14,7 @@ const mydata = [
   {
     "name": "Gil Peters",
     "isReadyToTalk": false,
+    "isVerified": false,
     "opentalks": 4111,
     "rating": 4387,
     "profile": "https://picsum.photos//200?sig=",
@@ -26,6 +27,7 @@ const mydata = [
   {
     "name": "Rajah Chandler",
     "isReadyToTalk": true,
+    "isVerified": false,
     "opentalks": 7551,
     "rating": 3852,
     "profile": "https://picsum.photos//200?sig=",
@@ -38,6 +40,7 @@ const mydata = [
   {
     "name": "Gage Henson",
     "isReadyToTalk": false,
+    "isVerified": true,
     "opentalks": 2426,
     "rating": 9232,
     "profile": "https://picsum.photos//200?sig=",
@@ -50,6 +53,7 @@ const mydata = [
   {
     "name": "Dorian Trujillo",
     "isReadyToTalk": true,
+    "isVerified": false,
     "opentalks": 5167,
     "rating": 5731,
     "profile": "https://picsum.photos//200?sig=",
@@ -62,6 +66,7 @@ const mydata = [
   {
     "name": "Flynn Dickson",
     "isReadyToTalk": true,
+    "isVerified": false,
     "opentalks": 7729,
     "rating": 6772,
     "profile": "https://picsum.photos//200?sig=",
@@ -74,6 +79,7 @@ const mydata = [
   {
     "name": "Alvin Hinton",
     "isReadyToTalk": true,
+    "isVerified": true,
     "opentalks": 5165,
     "rating": 3080,
     "profile": "https://picsum.photos//200?sig=",
@@ -87,6 +93,7 @@ const mydata = [
     "name": "Hayley Davis",
     "isReadyToTalk": false,
     "opentalks": 2370,
+    "isVerified": false,
     "rating": 9793,
     "profile": "https://picsum.photos//200?sig=",
     "gender": "Erat Volutpat Institute",
@@ -98,6 +105,7 @@ const mydata = [
   {
     "name": "Adrian Cotton",
     "isReadyToTalk": false,
+    "isVerified": false,
     "opentalks": 2277,
     "rating": 5069,
     "profile": "https://picsum.photos//200?sig=",
@@ -110,6 +118,7 @@ const mydata = [
   {
     "name": "Kessie Newman",
     "isReadyToTalk": true,
+    "isVerified": true,
     "opentalks": 6648,
     "rating": 9144,
     "profile": "https://picsum.photos//200?sig=",
@@ -122,6 +131,7 @@ const mydata = [
   {
     "name": "Ori Ortiz",
     "isReadyToTalk": false,
+    "isVerified": false,
     "opentalks": 4382,
     "rating": 9474,
     "profile": "https://picsum.photos//200?sig=",
