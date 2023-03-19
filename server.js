@@ -1,12 +1,26 @@
 const path = require('path');
 const express = require('express');
 const { MongoClient } = require('mongodb');
-
 const app = express();
-const server = require('http').Server(app);
-const socket = require('socket.io');
+const http = require('http').Server(app);
+const io = require('socket.io')(http, {
+  maxHttpBufferSize: 1e8, // Increase max HTTP buffer size to handle large payloads
+  transports: ['websocket'], // Use only the websocket transport for better performance
+  pingTimeout: 60000, // Increase the ping timeout to prevent disconnects due to slow network
+  pingInterval: 25000, // Decrease the ping interval for faster heartbeat checks
+  upgradeTimeout: 30000, // Increase the upgrade timeout to handle slow upgrades
+  allowUpgrades: true, // Allow upgrades to websocket transport
+  cors: { origin: '*' }, // Allow all CORS requests
+  cookie: false, // Disable cookie support
+  perMessageDeflate: { // Enable per-message deflate compression
+    threshold: 1024,
+  },
+  httpCompression: true, // Enable HTTP compression
+  serveClient: false, // Do not serve the Socket.io client file
+});
 
-const io = socket(server);
+io.sockets.setMaxListeners(5000); // Increase the maximum number of listeners to handle large number of clients
+
 
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
