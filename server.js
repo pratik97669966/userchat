@@ -1,11 +1,8 @@
 const path = require('path');
 const express = require('express');
 const { MongoClient } = require('mongodb');
-
 const app = express();
 const server = require('http').Server(app);
-const socket = require('socket.io');
-
 const io = require('socket.io')(server, {
   maxHttpBufferSize: 1e8, // Increase max HTTP buffer size to handle large payloads
   transports: ['websocket'], // Use only the websocket transport for better performance
