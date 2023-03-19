@@ -16,10 +16,9 @@ const io = require('socket.io')(server, {
     threshold: 1024,
   },
   httpCompression: true, // Enable HTTP compression
-  serveClient: false, // Do not serve the Socket.io client file
 });
 
-// io.sockets.setMaxListeners(5000);
+ io.sockets.setMaxListeners(5000);
 
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
