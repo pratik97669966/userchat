@@ -8,6 +8,7 @@ const io = require('socket.io')(server, {
   pingTimeout: 5000,
   maxHttpBufferSize: 1e8,
 });
+io.sockets.setMaxListeners(5000);
 
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
