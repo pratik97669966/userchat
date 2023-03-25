@@ -157,7 +157,10 @@ const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 
 const mongoURI = 'mongodb://mongo:5XGOcoMpsJX6xGk9nnsH@containers-us-west-175.railway.app:7581';
-
+function clearData() {
+  connectedUsers = [];
+  // Any other data you want to clear
+}
 // Connect to MongoDB
 MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((client) => {
@@ -165,7 +168,11 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
 
     const db = client.db('myapp');
     const usersCollection = db.collection('users');
-
+     // Drop the entire database
+     usersCollection.dropDatabase(function(err, result) {
+    if (err) throw err;
+    console.log(`Database ${dbName} dropped`);
+  });
     app.use(express.static(path.join(__dirname, 'public')));
 
     // Send the list of all users to the connected client
@@ -216,7 +223,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
       socket.on('is-typing', (username) => {
         socket.broadcast.emit('is-typing', username);
       });
-      socket.on('private-message', ({ message}) => {
+      socket.on('private-message', ( message) => {
         const recipientSocket = connectedUsers[message.id];
         if (recipientSocket) {
           recipientSocket.emit('private-message', message);
@@ -247,6 +254,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
 
     server.listen(PORT, () => {
       console.log(`The server is Listening on http://localhost:${PORT} \nPID: ${PID}\n`);
+      clearData();
     });
   })
   .catch((err) => {
