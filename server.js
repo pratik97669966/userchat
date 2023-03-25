@@ -216,8 +216,8 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
       socket.on('is-typing', (username) => {
         socket.broadcast.emit('is-typing', username);
       });
-      socket.on('private-message', ({ message, recipientId }) => {
-        const recipientSocket = connectedUsers[recipientId];
+      socket.on('private-message', ({ message}) => {
+        const recipientSocket = connectedUsers[message._id];
         if (recipientSocket) {
           recipientSocket.emit('private-message', message);
         } else {
