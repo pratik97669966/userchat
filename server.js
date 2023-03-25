@@ -152,6 +152,7 @@ const mydata = [
   }
 
 ]
+const connectedUsers = {};
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 
@@ -183,6 +184,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
       console.log(`The socket is connected! Socket id: ${socket.id}`);
 
       // Send the list of all users to the new client
+      connectedUsers[socket.id] = socket;
       sendUsersList(socket);
 
       // Add a new user to the database
@@ -214,21 +216,32 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
       socket.on('is-typing', (username) => {
         socket.broadcast.emit('is-typing', username);
       });
+      socket.on('private-message', ({ message, recipientId }) => {
+        const recipientSocket = connectedUsers[recipientId];
+        if (recipientSocket) {
+          recipientSocket.emit('private-message', message);
+        } else {
+          console.log('Recipient socket not found');
+        }
+      });
 
       // Remove a user from the database
       socket.on('disconnect', () => {
-        console.log(`User ${socket.id} Want to remove from MongoDB`);
         usersCollection.findOneAndDelete({ id: socket.id })
           .then((result) => {
             const user = result.value;
             if (user) {
               io.emit('user-removed', user);
-              console.log(`User ${user.name} removed from MongoDB`);
             }
           })
           .catch((err) => {
             console.log('Error removing user from MongoDB:', err);
           });
+        const index = connectedUsers.findIndex((user) => user.id === socket.id);
+        if (index !== -1) {
+          connectedUsers.splice(index, 1);
+          console.log(`User ${socket.id} connectedUsers`);
+        }
       });
     });
 
