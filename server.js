@@ -152,7 +152,7 @@ const mydata = [
   }
 
 ]
-const connectedUsers = {};
+const connectedUsers = [];
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 
