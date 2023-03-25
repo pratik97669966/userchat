@@ -168,11 +168,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
 
     const db = client.db('myapp');
     const usersCollection = db.collection('users');
-     // Drop the entire database
-     usersCollection.dropDatabase(function(err, result) {
-    if (err) throw err;
-    console.log(`Database ${dbName} dropped`);
-  });
+  
     app.use(express.static(path.join(__dirname, 'public')));
 
     // Send the list of all users to the connected client
