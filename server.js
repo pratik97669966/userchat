@@ -224,7 +224,30 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
           console.log('Recipient socket not found');
         }
       });
-
+      socket.on('private-btnRequestAccept', (message) => {
+        const recipientSocket = connectedUsers[message.id];
+        if (recipientSocket) {
+          recipientSocket.emit('private-btnRequestAccept', message);
+        } else {
+          console.log('Recipient socket not found');
+        }
+      });
+      socket.on('private-btnRequestCancel', (message) => {
+        const recipientSocket = connectedUsers[message.id];
+        if (recipientSocket) {
+          recipientSocket.emit('private-btnRequestCancel', message);
+        } else {
+          console.log('Recipient socket not found');
+        }
+      });
+      socket.on('private-btnCancel', (message) => {
+        const recipientSocket = connectedUsers[message.id];
+        if (recipientSocket) {
+          recipientSocket.emit('private-btnCancel', message);
+        } else {
+          console.log('Recipient socket not found');
+        }
+      });
       // Remove a user from the database
       socket.on('disconnect', () => {
         usersCollection.findOneAndDelete({ id: socket.id })
