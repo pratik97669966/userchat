@@ -14,7 +14,8 @@ const io = socket(server);
 // const io = Server(server);
 
 
-
+const PID = process.pid;
+const PORT = process.env.PORT || 5000;
 const userPreferences = new Map();
 app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
@@ -133,6 +134,6 @@ function getUserPreferences(user) {
   return preferences;
 }
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+server.listen(PORT, () => {
+  console.log(`The server is Listening on http://localhost:${PORT} \nPID: ${PID}\n`);
 });
