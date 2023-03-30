@@ -3,20 +3,21 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const socket = require('socket.io');
+
 const io = socket(server);
+
+// const express = require('express');
+// const app = express();
+// const http = require('http');
+// const server = http.createServer(app);
+// const { Server } = require('socket.io');
+// const io = Server(server);
+
+const pool = [];
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 const userPreferences = new Map();
-
-// Store users in separate pools based on gender
-const pools = {
-  male: [],
-  female: [],
-  other: []
-};
-
 app.use(express.static(path.join(__dirname, 'public')));
-
 io.on('connection', (socket) => {
   let user = null;
 
@@ -28,36 +29,30 @@ io.on('connection', (socket) => {
       wantsVideo: userData.wantsVideo
     };
 
-    addUserToPool(user);
+    addUserPreferences(user);
 
     let match = findMatch(user);
     if (match) {
       io.to(user.id).emit('match', match.id);
       io.to(match.id).emit('match', user.id);
-      removeUserFromPool(user);
-      removeUserFromPool(match);
+      removeUserPreferences(user);
+      removeUserPreferences(match);
     }
   });
 
   socket.on('disconnect', () => {
     if (user) {
-      removeUserFromPool(user);
+      removeUserPreferences(user);
       let match = findMatch(user);
       if (match) {
         io.to(match.id).emit('cancelMatch');
-        removeUserFromPool(match);
+        removeUserPreferences(match);
       }
     }
   });
 });
 
 function findMatch(user) {
-  let pool = getPoolByGender(user.gender);
-
-  if (pool.length === 0) {
-    return null;
-  }
-
   let preferences = getUserPreferences(user);
 
   let matchGender = null;
@@ -87,29 +82,6 @@ function findMatch(user) {
   return null;
 }
 
-// Add the user to the pool based on gender
-function addUserToPool(user) {
-  let pool = getPoolByGender(user.gender);
-  pool.push(user);
-}
-
-// Remove the user from the pool based on gender
-function removeUserFromPool(user) {
-  let pool = getPoolByGender(user.gender);
-  pool.splice(pool.indexOf(user), 1);
-}
-
-// Get the pool based on gender
-function getPoolByGender(gender) {
-  if (gender === 'male') {
-    return pools.male;
-  } else if (gender === 'female') {
-    return pools.female;
-  } else {
-    return pools.other;
-  }
-}
-
 // Add the user preferences to the map for faster matchmaking
 function addUserPreferences(user) {
   let pref = userPreferences.get(user.gender);
@@ -125,7 +97,7 @@ function addUserPreferences(user) {
   prefArr.push(user);
 }
 
-// Remove the user
+// Remove the user preferences from the map
 function removeUserPreferences(user) {
   let pref = userPreferences.get(user.gender);
   if (pref) {
@@ -146,7 +118,7 @@ function removeUserPreferences(user) {
 
 // Get the user preference string for matchmaking
 function getUserPreferenceString(user) {
-  return "${user.gender}_${user.wantsAudio}_${user.wantsVideo}";
+  return user.wantsAudio.toString() + user.wantsVideo.toString();
 }
 
 // Get the list of matching user preferences for matchmaking
@@ -163,5 +135,5 @@ function getUserPreferences(user) {
 }
 
 server.listen(PORT, () => {
-  console.log("The server is Listening on http://localhost:${PORT} \nPID: ${PID}\n");
+  console.log(`The server is Listening on http://localhost:${PORT} \nPID: ${PID}\n`);
 });
