@@ -16,7 +16,7 @@ const io = socket(server);
 
 
 const userPreferences = new Map();
-
+app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
   let user = null;
 
