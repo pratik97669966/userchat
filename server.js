@@ -3,136 +3,106 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const socket = require('socket.io');
-
 const io = socket(server);
-
-// const express = require('express');
-// const app = express();
-// const http = require('http');
-// const server = http.createServer(app);
-// const { Server } = require('socket.io');
-// const io = Server(server);
-
-const pool = [];
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 const userPreferences = new Map();
 app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
-  let user = null;
+  const MATCH_TIMEOUT = 5000; // 5 seconds
 
-  socket.on('join', (userData) => {
-    user = {
-      id: socket.id,
-      gender: userData.gender,
-      wantsAudio: userData.wantsAudio,
-      wantsVideo: userData.wantsVideo
-    };
+let users = [];
+let waitingUsers = [];
 
-    addUserPreferences(user);
+io.on('connection', (socket) => {
+  // When a new user connects, add them to the list of users
+  users.push({
+    id: socket.id,
+    gender: null, // Set gender to null initially
+    lookingFor: 'any', // Set lookingFor to 'any' initially
+    profile: null, // Set profile to null initially
+    timeoutId: null, // Set timeoutId to null initially
+  });
 
-    let match = findMatch(user);
-    if (match) {
-      io.to(user.id).emit('match', match.id);
-      io.to(match.id).emit('match', user.id);
-      removeUserPreferences(user);
-      removeUserPreferences(match);
+  // Handle user disconnection
+  socket.on('disconnect', () => {
+    const user = users.find((user) => user.id === socket.id);
+    users = users.filter((user) => user.id !== socket.id);
+    waitingUsers = waitingUsers.filter((user) => user.id !== socket.id);
+    if (user.timeoutId) {
+      clearTimeout(user.timeoutId);
     }
   });
 
-  socket.on('disconnect', () => {
+  // Handle gender selection
+  socket.on('select gender', (gender) => {
+    const user = users.find((user) => user.id === socket.id);
     if (user) {
-      removeUserPreferences(user);
-      let match = findMatch(user);
-      if (match) {
-        io.to(match.id).emit('cancelMatch');
-        removeUserPreferences(match);
-      }
+      user.gender = gender;
+      // Try to find a match for the user
+      matchUser(user);
     }
+  });
+
+  // Handle lookingFor selection
+  socket.on('select lookingFor', (lookingFor) => {
+    const user = users.find((user) => user.id === socket.id);
+    if (user) {
+      user.lookingFor = lookingFor;
+      // Try to find a match for the user
+      matchUser(user);
+    }
+  });
+
+  // Handle profile update
+  socket.on('update profile', (profile) => {
+    const user = users.find((user) => user.id === socket.id);
+    if (user) {
+      user.profile = profile;
+    }
+  });
+
+  // Function to find a match for a user
+  const matchUser = (user) => {
+    // Clear any existing timeout
+    if (user.timeoutId) {
+      clearTimeout(user.timeoutId);
+      user.timeoutId = null;
+    }
+
+    // First, check if there are any waiting users who match the user's preferences
+    const otherUser = waitingUsers.find(
+      (other) =>
+        other.id !== user.id &&
+        other.gender !== user.gender &&
+        (user.lookingFor === 'any' || other.gender === user.lookingFor)
+    );
+    if (otherUser) {
+      // Found a match, emit 'match' event to both users
+      waitingUsers = waitingUsers.filter((other) => other.id !== otherUser.id);
+      io.to(user.id).to(otherUser.id).emit('match', otherUser.profile);
+    } else {
+      // No waiting user found, add the user to the waiting list
+      waitingUsers.push(user);
+      // Set a timeout to remove the user from the waiting list after a certain time
+      user.timeoutId = setTimeout(() => {
+        waitingUsers = waitingUsers.filter((other) => other.id !== user.id);
+        user.timeoutId = null;
+      }, MATCH_TIMEOUT);
+    }
+  };
+
+  // Handle cancel search
+  socket.on('cancel search', () => {
+    const user = users.find((user) => user.id === socket.id);
+    if (user.timeoutId) {
+      clearTimeout(user.timeoutId);
+      user.timeoutId = null;
+    }
+    waitingUsers = waitingUsers.filter((user) => user.id !== socket.id);
   });
 });
 
-function findMatch(user) {
-  let preferences = getUserPreferences(user);
-
-  let matchGender = null;
-  let matchAudio = null;
-  let matchVideo = null;
-
-  for (let pref of preferences) {
-    matchGender = pref.gender;
-    matchAudio = pref.wantsAudio;
-    matchVideo = pref.wantsVideo;
-
-    // Check if the user is available
-    let match = pool.find(otherUser =>
-      otherUser.id !== user.id &&
-      otherUser.gender === pref.gender &&
-      otherUser.wantsAudio === pref.wantsAudio &&
-      otherUser.wantsVideo === pref.wantsVideo &&
-      (!matchGender || otherUser.gender === matchGender) &&
-      (matchAudio === null || otherUser.wantsAudio === matchAudio) &&
-      (matchVideo === null || otherUser.wantsVideo === matchVideo)
-    );
-
-    if (match) {
-      return match;
-    }
-  }
-  return null;
-}
-
-// Add the user preferences to the map for faster matchmaking
-function addUserPreferences(user) {
-  let pref = userPreferences.get(user.gender);
-  if (!pref) {
-    pref = new Map();
-    userPreferences.set(user.gender, pref);
-  }
-  let prefArr = pref.get(getUserPreferenceString(user));
-  if (!prefArr) {
-    prefArr = [];
-    pref.set(getUserPreferenceString(user), prefArr);
-  }
-  prefArr.push(user);
-}
-
-// Remove the user preferences from the map
-function removeUserPreferences(user) {
-  let pref = userPreferences.get(user.gender);
-  if (pref) {
-    let prefArr = pref.get(getUserPreferenceString(user));
-    if (prefArr) {
-      prefArr = prefArr.filter(otherUser => otherUser.id !== user.id);
-      if (prefArr.length === 0) {
-        pref.delete(getUserPreferenceString(user));
-      } else {
-        pref.set(getUserPreferenceString(user), prefArr);
-      }
-    }
-    if (pref.size === 0) {
-      userPreferences.delete(user.gender);
-    }
-  }
-}
-
-// Get the user preference string for matchmaking
-function getUserPreferenceString(user) {
-  return user.wantsAudio.toString() + user.wantsVideo.toString();
-}
-
-// Get the list of matching user preferences for matchmaking
-function getUserPreferences(user) {
-  let preferences = [];
-  let pref = userPreferences.get(user.gender);
-  if (pref) {
-    let prefArr = pref.get(getUserPreferenceString(user));
-    if (prefArr) {
-      preferences.push(...prefArr);
-    }
-  }
-  return preferences;
-}
 
 server.listen(PORT, () => {
   console.log(`The server is Listening on http://localhost:${PORT} \nPID: ${PID}\n`);
