@@ -8,7 +8,7 @@ const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 const userPreferences = new Map();
 app.use(express.static(path.join(__dirname, 'public')));
-  const MATCH_TIMEOUT = 5000; // 5 seconds
+  const MATCH_TIMEOUT = 30000; // 5 seconds
 
 let users = [];
 let waitingUsers = [];
