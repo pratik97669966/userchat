@@ -13,7 +13,11 @@ const io = socket(server);
 // const { Server } = require('socket.io');
 // const io = Server(server);
 
-
+const pools = {
+  male: [],
+  female: [],
+  other: []
+};
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 const userPreferences = new Map();
