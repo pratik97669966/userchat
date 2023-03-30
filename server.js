@@ -8,7 +8,6 @@ const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 const userPreferences = new Map();
 app.use(express.static(path.join(__dirname, 'public')));
-io.on('connection', (socket) => {
   const MATCH_TIMEOUT = 5000; // 5 seconds
 
 let users = [];
