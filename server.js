@@ -8,7 +8,7 @@ const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 const userPreferences = new Map();
 app.use(express.static(path.join(__dirname, 'public')));
-  const MATCH_TIMEOUT = 30000; // 5 seconds
+const MATCH_TIMEOUT = 30000; // 5 seconds
 
 let users = [];
 let waitingUsers = [];
@@ -22,6 +22,7 @@ io.on('connection', (socket) => {
     profile: null, // Set profile to null initially
     timeoutId: null, // Set timeoutId to null initially
   });
+  console.log("Users list ", users)
 
   // Handle user disconnection
   socket.on('disconnect', () => {
@@ -48,6 +49,7 @@ io.on('connection', (socket) => {
     const user = users.find((user) => user.id === socket.id);
     if (user) {
       user.lookingFor = lookingFor;
+      console.log("select lookingFor ", user)
       // Try to find a match for the user
       matchUser(user);
     }
@@ -56,6 +58,7 @@ io.on('connection', (socket) => {
   // Handle profile update
   socket.on('update profile', (profile) => {
     const user = users.find((user) => user.id === socket.id);
+    console.log("select lookingFor ", user)
     if (user) {
       user.profile = profile;
     }
