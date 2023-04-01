@@ -40,7 +40,7 @@ const mydata = [
   },
   {
     "name": "John",
-    "isReadyToTalk": true,
+    "isReadyToTalk": false,
     "isVerified": true,
     "opentalks": 1276,
     "rating": 7635,
@@ -54,7 +54,7 @@ const mydata = [
   },
   {
     "name": "Sophie",
-    "isReadyToTalk": true,
+    "isReadyToTalk": false,
     "isVerified": true,
     "opentalks": 2893,
     "rating": 9312,
@@ -82,7 +82,7 @@ const mydata = [
   },
   {
     "name": "Maria",
-    "isReadyToTalk": true,
+    "isReadyToTalk": false,
     "isVerified": false,
     "opentalks": 302,
     "rating": 4215,
@@ -96,7 +96,7 @@ const mydata = [
   },
   {
     "name": "William",
-    "isReadyToTalk": true,
+    "isReadyToTalk": false,
     "isVerified": true,
     "opentalks": 564,
     "rating": 7856,
@@ -110,7 +110,7 @@ const mydata = [
   },
   {
     "name": "Emma",
-    "isReadyToTalk": true,
+    "isReadyToTalk": false,
     "isVerified": true,
     "opentalks": 1483,
     "rating": 9123,
@@ -138,7 +138,7 @@ const mydata = [
   },
   {
     "name": "Olivia",
-    "isReadyToTalk": true,
+    "isReadyToTalk": false,
     "isVerified": true,
     "opentalks": 3275,
     "rating": 8765,
@@ -197,6 +197,20 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
           })
           .catch((err) => {
             console.log('Error adding user to MongoDB:', err);
+          });
+      });
+      // Update an existing user in the database
+      socket.on('update-user', (user) => {
+        usersCollection.updateOne(
+          { id: user.id },
+          { $set: user }
+        )
+          .then(() => {
+            console.log(`User ${user.name} updated in MongoDB`);
+            io.emit('user-update', user);
+          })
+          .catch((err) => {
+            console.log('Error updating user in MongoDB:', err);
           });
       });
       socket.on('insert-all', (users) => {
