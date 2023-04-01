@@ -24,7 +24,7 @@ const matchTimeout = 2 * 60 * 1000; // 2 minutes in milliseconds
 
 io.on('connection', socket => {
   // When a user connects to the server
-  console.log('User connected');
+  console.log(`connected ${socket.id} `);
 
   // When the user sends their data to the server
   socket.on('user_data', data => {
