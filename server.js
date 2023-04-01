@@ -238,6 +238,14 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
           console.log('Recipient socket not found');
         }
       });
+      socket.on('talk-now-accepted', (message) => {
+        const recipientSocket = connectedUsers[message.id];
+        if (recipientSocket) {
+          recipientSocket.emit('talk-now-accepted', message);
+        } else {
+          console.log('Recipient socket not found');
+        }
+      });
       socket.on('private-btnRequestAccept', (message) => {
         const recipientSocket = connectedUsers[message.id];
         if (recipientSocket) {
