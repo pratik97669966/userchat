@@ -230,14 +230,6 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
       socket.on('is-typing', (username) => {
         socket.broadcast.emit('is-typing', username);
       });
-      socket.on('private-message', (message) => {
-        const recipientSocket = connectedUsers[message.id];
-        if (recipientSocket) {
-          recipientSocket.emit('private-message', message);
-        } else {
-          console.log('Recipient socket not found');
-        }
-      });
       socket.on('talk-now-accepted', (message) => {
         const recipientSocket = connectedUsers[message.id];
         if (recipientSocket) {
@@ -246,6 +238,15 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
           console.log('Recipient socket not found');
         }
       });
+      socket.on('private-message', (message) => {
+        const recipientSocket = connectedUsers[message.id];
+        if (recipientSocket) {
+          recipientSocket.emit('private-message', message);
+        } else {
+          console.log('Recipient socket not found');
+        }
+      });
+      
       socket.on('private-btnRequestAccept', (message) => {
         const recipientSocket = connectedUsers[message.id];
         if (recipientSocket) {
