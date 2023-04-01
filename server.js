@@ -202,7 +202,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
       // Update an existing user in the database
       socket.on('update-user', (user) => {
         usersCollection.updateOne(
-          { id: user.id },
+          { id: socket.id},
           { $set: user }
         )
           .then(() => {
