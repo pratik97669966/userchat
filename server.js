@@ -1,14 +1,31 @@
 const express = require("express");
 const app = express();
-var profanity = require("profanity-hindi");
-const server = require("http").Server(app);
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
-app.set("view engine", "ejs");
-const io = require("socket.io")(server, {
-  cors: {
-    origin: '*'
-  }
+const profanity = require("profanity-hindi");
+
+// Connect to MongoDB
+mongoose.connect("mongodb://localhost:27017/chatapp", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
+
+// Create a chat message schema
+const chatMessageSchema = new mongoose.Schema({
+  roomId: String,
+  messages: [{
+    userId: String,
+    userName: String,
+    message: String,
+    createdAt: Date
+  }]
+});
+
+const ChatMessage = mongoose.model("ChatMessage", chatMessageSchema);
+
+app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
@@ -20,17 +37,53 @@ app.get("/:room", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId, userName) => {
+  socket.on("join-room", (roomId, userId, userName, lastSeenMessageId) => {
     socket.join(roomId);
+
+    // Retrieve the chat history from MongoDB if lastSeenMessageId is not null
+    if (lastSeenMessageId !== null) {
+      ChatMessage.findOne({ roomId: roomId }, (err, chatMessage) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        if (!chatMessage) {
+          // Chat history not found for this room
+          return;
+        }
+        const messages = chatMessage.messages;
+        // Send the chat history to the client
+        socket.emit("chat-history", messages);
+      });
+    }
+
     socket.to(roomId).broadcast.emit("user-connected", userId);
+
     socket.on("message", (message) => {
       var isDirty = profanity.isMessageDirty(message);
       if (isDirty) {
-        message = "<span style='color: red;'>🚨 Using bad word may ban your account permanantly</span>";
+        message = "<span style='color: red;'>🚨 Using bad word may ban your account permanently</span>";
+      } else {
+        // Save the chat message to MongoDB
+        const chatMessage = new ChatMessage({
+          roomId: roomId,
+          userId: userId,
+          userName: userName,
+          message: message
+        });
+        chatMessage.save((err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          io.to(roomId).emit("createMessage", message, userName);
+        });
       }
-      io.to(roomId).emit("createMessage", message, userName);
     });
   });
 });
 
-server.listen(process.env.PORT || 3030);
+
+server.listen(process.env.PORT || 3030, () => {
+  console.log("Server running on port 3030");
+});
