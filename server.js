@@ -5,9 +5,9 @@ const io = require("socket.io")(server);
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const profanity = require("profanity-hindi");
-
+const PORT = process.env.PORT || 3030;
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/chatapp", {
+mongoose.connect("mongodb://mongo:5XGOcoMpsJX6xGk9nnsH@containers-us-west-175.railway.app:7581", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -56,9 +56,7 @@ io.on("connection", (socket) => {
         socket.emit("chat-history", messages);
       });
     }
-
     socket.to(roomId).broadcast.emit("user-connected", userId);
-
     socket.on("message", (message) => {
       var isDirty = profanity.isMessageDirty(message);
       if (isDirty) {
@@ -84,6 +82,6 @@ io.on("connection", (socket) => {
 });
 
 
-server.listen(process.env.PORT || 3030, () => {
-  console.log("Server running on port 3030");
+server.listen(PORT, () => {
+  console.log('server running on {PORT}');
 });
