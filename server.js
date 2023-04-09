@@ -74,11 +74,9 @@ io.on("connection", (socket) => {
           })
           .catch((error) => {
             console.error(error);
-            io.to(roomId).emit("errorMessage", "Error saving message to database"); // Emit error message to the client
           });
       }
     });
-    
 
   });
 });
