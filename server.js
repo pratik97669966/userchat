@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 const profanity = require("profanity-hindi");
 const PORT = process.env.PORT || 3030;
 // Connect to MongoDB
-mongoose.connect("mongodb://mongo:5XGOcoMpsJX6xGk9nnsH@containers-us-west-175.railway.app:7581", {
+mongoose.connect("mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -83,5 +83,5 @@ io.on("connection", (socket) => {
 
 
 server.listen(PORT, () => {
-  console.log('server running on {PORT}');
+  console.log(`The server is Listening on${PORT}`);
 });
