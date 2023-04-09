@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 const profanity = require("profanity-hindi");
 const PORT = process.env.PORT || 3030;
 // Connect to MongoDB
-mongoose.connect("mongodb://mongo:ndn8U9RHdJxAaQM5pL7Z@containers-us-west-114.railway.app:7199", {
+mongoose.connect("mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
