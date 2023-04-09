@@ -41,21 +41,27 @@ io.on("connection", (socket) => {
     socket.join(roomId);
 
     // Retrieve the chat history from MongoDB if lastSeenMessageId is not null
-    if (lastSeenMessageId !== null) {
-      ChatMessage.findOne({ roomId: roomId })
-        .then((chatMessage) => {
-          if (!chatMessage) {
-            // Chat history not found for this room
-            return;
-          }
-          const messages = chatMessage.messages;
-          // Send the chat history to the client
-          socket.emit("chat-history", messages);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
+    ChatMessage.findOne({ roomId: roomId })
+      .then((chatMessage) => {
+        if (!chatMessage) {
+          // Chat history not found for this room
+          return;
+        }
+        let messages;
+        if (lastSeenMessageId !== null) {
+          const query = { _id: { $gt: lastSeenMessageId } };
+          messages = chatMessage.messages.find(query);
+        } else {
+          messages = chatMessage.messages;
+        }
+        // Send the next set of messages to the client
+        socket.emit("chat-history", messages);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+
     socket.to(roomId).broadcast.emit("user-connected", userId);
     socket.on("message", (message) => {
       var isDirty = profanity.isMessageDirty(message);
