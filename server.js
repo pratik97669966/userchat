@@ -42,19 +42,19 @@ io.on("connection", (socket) => {
 
     // Retrieve the chat history from MongoDB if lastSeenMessageId is not null
     if (lastSeenMessageId !== null) {
-      ChatMessage.findOne({ roomId: roomId }, (err, chatMessage) => {
-        if (err) {
+      ChatMessage.findOne({ roomId: roomId })
+        .then((chatMessage) => {
+          if (!chatMessage) {
+            // Chat history not found for this room
+            return;
+          }
+          const messages = chatMessage.messages;
+          // Send the chat history to the client
+          socket.emit("chat-history", messages);
+        })
+        .catch((err) => {
           console.error(err);
-          return;
-        }
-        if (!chatMessage) {
-          // Chat history not found for this room
-          return;
-        }
-        const messages = chatMessage.messages;
-        // Send the chat history to the client
-        socket.emit("chat-history", messages);
-      });
+        });
     }
     socket.to(roomId).broadcast.emit("user-connected", userId);
     socket.on("message", (message) => {
