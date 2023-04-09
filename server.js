@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
         // Save the chat message to MongoDB
         ChatMessage.findOneAndUpdate(
           { roomId: roomId },
-          { $push: { messages: { userId: userId, userName: userName, message: message, createdAt: new Date() } } },
+          { $push: { messages: { userId: userId, userName: userName, message: message, createdAt: new Date().toUTCString() } } },
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
