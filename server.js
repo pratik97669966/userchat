@@ -69,8 +69,7 @@ io.on("connection", (socket) => {
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
-            const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
-            io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
+            io.to(roomId).emit("createMessage", message, userName);
           })
           .catch((error) => {
             console.error(error);
