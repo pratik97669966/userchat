@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
+const moment = require('moment');
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const profanity = require("profanity-hindi");
@@ -72,7 +73,7 @@ io.on("connection", (socket) => {
         // Save the chat message to MongoDB
         ChatMessage.findOneAndUpdate(
           { roomId: roomId },
-          { $push: { messages: { userId: userId, userName: userName, message: message, createdAt: new Date().toUTCString() } } },
+          { $push: { messages: { userId: userId, userName: userName, message: message, createdAt: moment.utc() } } },
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
