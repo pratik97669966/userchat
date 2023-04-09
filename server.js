@@ -69,14 +69,16 @@ io.on("connection", (socket) => {
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
-            const savedMessage = chatMessage.messages[chatMessage.messages.length - 1];
-            io.to(roomId).emit("createMessage", savedMessage, userName);
+            const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
+            io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
           })
           .catch((error) => {
             console.error(error);
+            io.to(roomId).emit("errorMessage", "Error saving message to database"); // Emit error message to the client
           });
       }
     });
+    
 
   });
 });
