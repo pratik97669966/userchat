@@ -69,16 +69,16 @@ io.on("connection", (socket) => {
           userName: userName,
           message: message
         });
-        chatMessage.save((err) => {
-          if (err) {
-            console.error(err);
-            return;
-          }
-          io.to(roomId).emit("createMessage", message, userName);
-        });
+        chatMessage.save()
+          .then(() => {
+            io.to(roomId).emit("createMessage", message, userName);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     });
-  });
+    
 });
 
 
