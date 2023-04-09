@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 const profanity = require("profanity-hindi");
 const PORT = process.env.PORT || 3030;
 // Connect to MongoDB
-mongoose.connect("mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority", {
+mongoose.connect("mongodb://mongo:ndn8U9RHdJxAaQM5pL7Z@containers-us-west-114.railway.app:7199", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -69,7 +69,8 @@ io.on("connection", (socket) => {
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
-            io.to(roomId).emit("createMessage", message, userName);
+            const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
+            io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
           })
           .catch((error) => {
             console.error(error);
