@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
           messages = chatMessage.messages;
         }
         // Send the next set of messages to the client
-        socket.emit("next-messages", messages);
+        socket.emit("chat-history", messages);
       })
       .catch((err) => {
         console.error(err);
