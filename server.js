@@ -69,7 +69,8 @@ io.on("connection", (socket) => {
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
-            io.to(roomId).emit("createMessage", message, userName);
+            const savedMessage = chatMessage.messages[chatMessage.messages.length - 1];
+            io.to(roomId).emit("createMessage", savedMessage, userName);
           })
           .catch((error) => {
             console.error(error);
