@@ -63,21 +63,20 @@ io.on("connection", (socket) => {
         message = "<span style='color: red;'>🚨 Using bad word may ban your account permanently</span>";
       } else {
         // Save the chat message to MongoDB
-        const chatMessage = new ChatMessage({
-          roomId: roomId,
-          userId: userId,
-          userName: userName,
-          message: message
-        });
-        chatMessage.save()
-          .then(() => {
+        ChatMessage.findOneAndUpdate(
+          { roomId: roomId },
+          { $push: { messages: { userId: userId, userName: userName, message: message, createdAt: new Date() } } },
+          { new: true, upsert: true }
+        )
+          .then((chatMessage) => {
             io.to(roomId).emit("createMessage", message, userName);
           })
           .catch((error) => {
             console.error(error);
           });
       }
-    });    
+    });
+
   });
 });
 
