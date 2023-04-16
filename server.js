@@ -19,6 +19,7 @@ const chatMessageSchema = new mongoose.Schema({
   messages: [{
     userId: String,
     userName: String,
+    messageType:String,
     message: String,
     createdAt: Date
   }]
@@ -62,7 +63,7 @@ io.on("connection", (socket) => {
           // Save disconnect chat message to MongoDB
           ChatMessage.findOneAndUpdate(
             { roomId: roomId },
-            { $push: { messages: { userId: userId, userName: userName, message: "Connected", createdAt: moment.utc() } } },
+            { $push: { messages: { userId: userId, userName: userName,messageType: "connection", message: "Connected", createdAt: moment.utc() } } },
             { new: true, upsert: true }
           )
             .then((chatMessage) => {
@@ -83,7 +84,7 @@ io.on("connection", (socket) => {
         // Save disconnect chat message to MongoDB
         ChatMessage.findOneAndUpdate(
           { roomId: roomId },
-          { $push: { messages: { userId: userId, userName: userName, message: "Disconnected", createdAt: moment.utc() } } },
+          { $push: { messages: { userId: userId, userName: userName,messageType: "connection", message: "Disconnected", createdAt: moment.utc() } } },
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
@@ -104,7 +105,7 @@ io.on("connection", (socket) => {
         // Save the chat message to MongoDB
         ChatMessage.findOneAndUpdate(
           { roomId: roomId },
-          { $push: { messages: { userId: userId, userName: userName, message: message, createdAt: moment.utc() } } },
+          { $push: { messages: { userId: userId, userName: userName,messageType: "message", message: message, createdAt: moment.utc() } } },
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
