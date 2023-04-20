@@ -59,42 +59,14 @@ io.on("connection", (socket) => {
         }
         // Send the next set of messages to the client
         socket.emit("chat-history", messages);
-        {
-          // Save disconnect chat message to MongoDB
-          ChatMessage.findOneAndUpdate(
-            { roomId: roomId },
-            { $push: { messages: { userId: userId, userName: userName,messageType: "connection", message: "Connected", createdAt: moment.utc() } } },
-            { new: true, upsert: true }
-          )
-            .then((chatMessage) => {
-              const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
-              io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        }
+      
       })
       .catch((err) => {
         console.error(err);
       });
 
     socket.on("disconnect", () => {
-      {
-        // Save disconnect chat message to MongoDB
-        ChatMessage.findOneAndUpdate(
-          { roomId: roomId },
-          { $push: { messages: { userId: userId, userName: userName,messageType: "connection", message: "Disconnected", createdAt: moment.utc() } } },
-          { new: true, upsert: true }
-        )
-          .then((chatMessage) => {
-            const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
-            io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }
+     
     });
     socket.to(roomId).broadcast.emit("user-connected", userId);
     socket.on("typing", (message) => {
