@@ -156,15 +156,15 @@ const connectedUsers = [];
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 
-const mongoURI = 'mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority';
+const mongoURI = "mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority";
 
 // Connect to MongoDB
 MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((client) => {
     console.log('Connected to MongoDB');
 
-    const db = client.db('Home Screen');
-    const usersCollection = db.collection('instant talk');
+    const db = client.db('HomeScreen');
+    const usersCollection = db.collection('instanttalk');
 
     app.use(express.static(path.join(__dirname, 'public')));
 
@@ -201,9 +201,9 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
       });
       // Update an existing user in the database
       socket.on('update-user', (user) => {
-        user.id =socket.id;
+        user.id = socket.id;
         usersCollection.updateOne(
-          { id: socket.id},
+          { id: socket.id },
           { $set: user }
         )
           .then(() => {
@@ -247,7 +247,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
           console.log('Recipient socket not found');
         }
       });
-      
+
       socket.on('private-btnRequestAccept', (message) => {
         const recipientSocket = connectedUsers[message.id];
         if (recipientSocket) {
