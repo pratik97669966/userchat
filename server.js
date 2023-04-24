@@ -156,15 +156,15 @@ const connectedUsers = [];
 const PID = process.pid;
 const PORT = process.env.PORT || 5000;
 
-const mongoURI = 'mongodb://mongo:5XGOcoMpsJX6xGk9nnsH@containers-us-west-175.railway.app:7581';
+const mongoURI = 'mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority';
 
 // Connect to MongoDB
 MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((client) => {
     console.log('Connected to MongoDB');
 
-    const db = client.db('myapp');
-    const usersCollection = db.collection('users');
+    const db = client.db('Home Screen');
+    const usersCollection = db.collection('instant talk');
 
     app.use(express.static(path.join(__dirname, 'public')));
 
