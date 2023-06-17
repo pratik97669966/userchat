@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const PORT = process.env.PORT || 3030;
 // Connect to MongoDB
-mongoose.connect("mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://chat:chatpass@cluster0.x7wtzxf.mongodb.net/?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -19,7 +19,7 @@ const chatMessageSchema = new mongoose.Schema({
   messages: [{
     userId: String,
     userName: String,
-    messageType:String,
+    messageType: String,
     message: String,
     createdAt: Date
   }]
@@ -59,14 +59,14 @@ io.on("connection", (socket) => {
         }
         // Send the next set of messages to the client
         socket.emit("chat-history", messages);
-      
+
       })
       .catch((err) => {
         console.error(err);
       });
 
     socket.on("disconnect", () => {
-     
+
     });
     socket.to(roomId).broadcast.emit("user-connected", userId);
     socket.on("typing", (message) => {
@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
         // Save the chat message to MongoDB
         ChatMessage.findOneAndUpdate(
           { roomId: roomId },
-          { $push: { messages: { userId: userId, userName: userName,messageType: "message", message: message, createdAt: moment.utc() } } },
+          { $push: { messages: { userId: userId, userName: userName, messageType: "message", message: message, createdAt: moment.utc() } } },
           { new: true, upsert: true }
         )
           .then((chatMessage) => {
