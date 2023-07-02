@@ -154,12 +154,12 @@ const mydata = [
 ]
 const connectedUsers = [];
 const PID = process.pid;
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 const mongoURI = "mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority";
 
 // Connect to MongoDB
-MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true , poolSize: 500 })
+MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, poolSize: 500 })
   .then((client) => {
     console.log('Connected to MongoDB');
 
@@ -201,9 +201,9 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
       });
       // Update an existing user in the database
       socket.on('update-user', (user) => {
-        user.id =socket.id;
+        user.id = socket.id;
         usersCollection.updateOne(
-          { id: socket.id},
+          { id: socket.id },
           { $set: user }
         )
           .then(() => {
@@ -247,7 +247,7 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true 
           console.log('Recipient socket not found');
         }
       });
-      
+
       socket.on('private-btnRequestAccept', (message) => {
         const recipientSocket = connectedUsers[message.id];
         if (recipientSocket) {
