@@ -154,7 +154,7 @@ const mydata = [
 ]
 const connectedUsers = [];
 const PID = process.pid;
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 const mongoURI = "mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority";
 
