@@ -189,15 +189,17 @@ MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true,
 
       // Add a new user to the database
       socket.on('new-user', (user) => {
-        user.id = socket.id;
-        usersCollection.insertOne(user)
-          .then(() => {
-            console.log(`User ${user.name} added to MongoDB`);
-            io.emit('user-add', user);
-          })
-          .catch((err) => {
-            console.log('Error adding user to MongoDB:', err);
-          });
+        if (user != null && socket != null) {
+          user.id = socket.id;
+          usersCollection.insertOne(user)
+            .then(() => {
+              console.log(`User ${user.name} added to MongoDB`);
+              io.emit('user-add', user);
+            })
+            .catch((err) => {
+              console.log('Error adding user to MongoDB:', err);
+            });
+        }
       });
       // Update an existing user in the database
       socket.on('update-user', (user) => {
