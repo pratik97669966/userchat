@@ -64,7 +64,22 @@ io.on("connection", (socket) => {
       .catch((err) => {
         console.error(err);
       });
-
+      socket.on("delete-all-messages", async (roomId) => {
+        try {
+          const chatMessage = await ChatMessage.findOne({ roomId: roomId });
+          if (!chatMessage) {
+            return;
+          }
+    
+          // Delete all messages for the room
+          chatMessage.messages = [];
+          await chatMessage.save();
+    
+          io.to(roomId).emit("all-messages-deleted"); // Notify clients about the deletion
+        } catch (error) {
+          console.error(error);
+        }
+      });
     socket.on("disconnect", () => {
 
     });
