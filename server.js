@@ -19,10 +19,19 @@ const mongoURI = "mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrit
 // Connect to MongoDB
 MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, poolSize: 500 })
   .then((client) => {
-    console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB with data clear');
 
     const db = client.db('HomeScreen');
     const usersCollection = db.collection('instanttalk');
+
+    // Add this block to delete all documents from the collection on server restart
+    usersCollection.deleteMany({})
+      .then(() => {
+        console.log('All documents deleted from users collection on server restart');
+      })
+      .catch((err) => {
+        console.log('Error deleting documents from users collection on server restart:', err);
+      });
 
     app.use(express.static(path.join(__dirname, 'public')));
 
