@@ -7,7 +7,6 @@ const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 
 const PORT = process.env.PORT || 3030;
-// Connect to MongoDB
 mongoose.connect("mongodb+srv://chat:chatpass@cluster0.x7wtzxf.mongodb.net/?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
