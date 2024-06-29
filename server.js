@@ -24,7 +24,7 @@ const chatMessageSchema = new mongoose.Schema({
   }]
 });
 
-const ChatMessage = mongoose.model("ChatMessage", chatMessageSchema);
+const ChatMessage = mongoose.model("ChatMessageNew", chatMessageSchema);
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
