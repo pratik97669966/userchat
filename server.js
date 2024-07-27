@@ -1,171 +1,156 @@
-const path = require('path');
-const express = require('express');
-const { MongoClient } = require('mongodb');
+const express = require("express");
 const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server, {
-  pingInterval: 10000,
-  pingTimeout: 5000,
-  maxHttpBufferSize: 1e8,
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+const moment = require('moment');
+const mongoose = require("mongoose");
+const { v4: uuidv4 } = require("uuid");
+
+const PORT = process.env.PORT || 3030;
+mongoose.connect("mongodb+srv://chat:chatpass@cluster0.x7wtzxf.mongodb.net/?retryWrites=true&w=majority", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
-io.sockets.setMaxListeners(5000);
 
-const connectedUsers = [];
-const PID = process.pid;
-const PORT = 3000;
+// Create a chat message schema
+const chatMessageSchema = new mongoose.Schema({
+  roomId: String,
+  messages: [{
+    userId: String,
+    userName: String,
+    messageType: String,
+    message: String,
+    createdAt: Date
+  }]
+});
 
-const mongoURI = "mongodb+srv://root:root@telusko.rb3lafm.mongodb.net/?retryWrites=true&w=majority";
+const ChatMessage = mongoose.model("ChatMessageNew", chatMessageSchema);
 
-// Connect to MongoDB
-MongoClient.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, poolSize: 500 })
-  .then((client) => {
-    console.log('Connected to MongoDB with data clear');
+app.set("view engine", "ejs");
+app.use(express.static("public"));
 
-    const db = client.db('HomeScreen');
-    const usersCollection = db.collection('instanttalk');
+app.get("/", (req, res) => {
+  res.redirect(`/${uuidv4()}`);
+});
 
-    // Add this block to delete all documents from the collection on server restart
-    usersCollection.deleteMany({})
-      .then(() => {
-        console.log('All documents deleted from users collection on server restart');
+app.get("/:room", (req, res) => {
+  res.render("room", { roomId: req.params.room });
+});
+
+io.on("connection", (socket) => {
+  socket.on("join-room", (roomId, userId, userName, lastSeenMessageId) => {
+    socket.join(roomId);
+    {
+      // Save the chat message to MongoDB
+      ChatMessage.findOneAndUpdate(
+        { roomId: roomId },
+        { $push: { messages: { userId: userId, userName: userName, messageType: "connection", message: "Join", createdAt: moment.utc() } } },
+        { new: true, upsert: true }
+      )
+        .then((chatMessage) => {
+          const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
+          io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    // Retrieve the chat history from MongoDB if lastSeenMessageId is not null
+    ChatMessage.findOne({ roomId: roomId })
+      .then((chatMessage) => {
+        if (!chatMessage) {
+          // Chat history not found for this room
+          return;
+        }
+        let messages;
+        if (lastSeenMessageId !== null) {
+          messages = chatMessage.messages.filter((message) => {
+            return message._id > lastSeenMessageId;
+          });
+        } else {
+          messages = chatMessage.messages;
+        }
+        // Send the next set of messages to the client
+        socket.emit("chat-history", messages);
+
       })
       .catch((err) => {
-        console.log('Error deleting documents from users collection on server restart:', err);
+        console.error(err);
       });
-
-    app.use(express.static(path.join(__dirname, 'public')));
-
-    // Send the list of all users to the connected client
-    const sendUsersList = (socket) => {
-      usersCollection.find().toArray()
-        .then((users) => {
-          socket.emit('users-list', users);
-        })
-        .catch((err) => {
-          console.log('Error getting users from MongoDB:', err);
-        });
-    };
-
-    // eslint-disable-next-line no-shadow
-    io.on('connection', (socket) => {
-      console.log(`The socket is connected! Socket id: ${socket.id}`);
-
-      // Send the list of all users to the new client
-      connectedUsers[socket.id] = socket;
-      sendUsersList(socket);
-
-      // Add a new user to the database
-      socket.on('new-user', (user) => {
-        if (user != null && socket != null) {
-          user.id = socket.id;
-          usersCollection.insertOne(user)
-            .then(() => {
-              console.log(`User ${user.name} added to MongoDB`);
-              io.emit('user-add', user);
-            })
-            .catch((err) => {
-              console.log('Error adding user to MongoDB:', err);
-            });
+      socket.on("delete-all-messages", async (roomId) => {
+        try {
+          const chatMessage = await ChatMessage.findOne({ roomId: roomId });
+          if (!chatMessage) {
+            return;
+          }
+    
+          // Delete all messages for the room
+          chatMessage.messages = [];
+          await chatMessage.save();
+    
+          io.to(roomId).emit("all-messages-deleted"); // Notify clients about the deletion
+          {
+            // Save the chat message to MongoDB
+            ChatMessage.findOneAndUpdate(
+              { roomId: roomId },
+              { $push: { messages: { userId: userId, userName: userName, messageType: "connection", message: " Chat Clear", createdAt: moment.utc() } } },
+              { new: true, upsert: true }
+            )
+              .then((chatMessage) => {
+                const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
+                io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }
+        } catch (error) {
+          console.error(error);
         }
       });
-      // Update an existing user in the database
-      socket.on('update-user', (user) => {
-        user.id = socket.id;
-        usersCollection.updateOne(
-          { id: socket.id },
-          { $set: user }
+    socket.on("disconnect", () => {
+      {
+        // Save the chat message to MongoDB
+        ChatMessage.findOneAndUpdate(
+          { roomId: roomId },
+          { $push: { messages: { userId: userId, userName: userName, messageType: "connection", message: "left", createdAt: moment.utc() } } },
+          { new: true, upsert: true }
         )
-          .then(() => {
-            console.log(`User ${user.name} updated in MongoDB`);
-            io.emit('user-update', user);
+          .then((chatMessage) => {
+            const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
+            io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
           })
-          .catch((err) => {
-            console.log('Error updating user in MongoDB:', err);
+          .catch((error) => {
+            console.error(error);
           });
-      });
-      socket.on('insert-all', (users) => {
-
-        // const socketId = socket.id;
-        // const usersWithSocketId = mydata.map((user) => ({ ...user, id: socketId }));
-
-        // usersCollection.insertMany(usersWithSocketId)
-        //   .then(() => {
-        //     console.log(`${usersWithSocketId.length} users added to MongoDB`);
-        //     sendUsersList(io);
-        //   })
-        //   .catch((err) => {
-        //     console.log('Error adding users to MongoDB:', err);
-        //   });
-      });
-      socket.on('is-typing', (username) => {
-        socket.broadcast.emit('is-typing', username);
-      });
-      socket.on('talk-now-accepted', (message) => {
-        const recipientSocket = connectedUsers[message.id];
-        if (recipientSocket) {
-          recipientSocket.emit('talk-now-accepted', message);
-        } else {
-          console.log('Recipient socket not found');
-        }
-      });
-      socket.on('private-message', (message) => {
-        message.message = "";
-        const recipientSocket = connectedUsers[message.id];
-        if (recipientSocket) {
-          recipientSocket.emit('private-message', message);
-        } else {
-          console.log('Recipient socket not found');
-        }
-      });
-
-      socket.on('private-btnRequestAccept', (message) => {
-        const recipientSocket = connectedUsers[message.id];
-        if (recipientSocket) {
-          recipientSocket.emit('private-btnRequestAccept', message);
-        } else {
-          console.log('Recipient socket not found');
-        }
-      });
-      socket.on('private-btnRequestCancel', (message) => {
-        const recipientSocket = connectedUsers[message.id];
-        if (recipientSocket) {
-          recipientSocket.emit('private-btnRequestCancel', message);
-        } else {
-          console.log('Recipient socket not found');
-        }
-      });
-      socket.on('private-btnCancel', (message) => {
-        const recipientSocket = connectedUsers[message.id];
-        if (recipientSocket) {
-          recipientSocket.emit('private-btnCancel', message);
-        } else {
-          console.log('Recipient socket not found');
-        }
-      });
-      // Remove a user from the database
-      socket.on('disconnect', () => {
-        usersCollection.findOneAndDelete({ id: socket.id })
-          .then((result) => {
-            const user = result.value;
-            if (user) {
-              io.emit('user-removed', user);
-            }
+      }
+    });
+    socket.to(roomId).broadcast.emit("user-connected", userId);
+    socket.on("typing", (message) => {
+      io.to(roomId).emit("user-typing", message, userName);
+    });
+    socket.on("message", (message) => {
+      {
+        // Save the chat message to MongoDB
+        ChatMessage.findOneAndUpdate(
+          { roomId: roomId },
+          { $push: { messages: { userId: userId, userName: userName, messageType: "message", message: message, createdAt: moment.utc() } } },
+          { new: true, upsert: true }
+        )
+          .then((chatMessage) => {
+            const savedMessage = chatMessage.messages[chatMessage.messages.length - 1]; // Get the last message in the array
+            io.to(roomId).emit("createMessage", savedMessage, userName); // Emit the saved message instead of the original message
           })
-          .catch((err) => {
-            console.log('Error removing user from MongoDB:', err);
+          .catch((error) => {
+            console.error(error);
           });
-        const index = connectedUsers.findIndex((user) => user.id === socket.id);
-        if (index !== -1) {
-          connectedUsers.splice(index, 1);
-          console.log(`User ${socket.id} connectedUsers`);
-        }
-      });
+      }
     });
 
-    server.listen(PORT, () => {
-      console.log(`The server is Listening on http://localhost:${PORT} \nPID: ${PID}\n`);
-    });
-  })
-  .catch((err) => {
-    console.log('Error connecting to MongoDB:', err);
   });
+});
+
+
+server.listen(PORT, () => {
+  console.log(`The server is Listening on${PORT}`);
+});
